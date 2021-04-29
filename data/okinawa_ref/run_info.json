@@ -1,0 +1,13 @@
+{
+	"n_targets": 58199,
+	"n_bootstraps": 0,
+	"n_processed": 12184487,
+	"n_pseudoaligned": 10697189,
+	"n_unique": 7729722,
+	"p_pseudoaligned": 87.8,
+	"p_unique": 63.4,
+	"kallisto_version": "0.44.0",
+	"index_version": 10,
+	"start_time": "Thu Apr 29 13:04:57 2021",
+	"call": "kallisto quant -i ../ref/protobothrops -o okinawa_ref protobothrops/GGCTAC_pe1.fq protobothrops/GGCTAC_pe2.fq"
+}

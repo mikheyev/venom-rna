@@ -1,0 +1,98 @@
+---
+title: "snake venom mrna"
+author: "Sasha Mikheyev"
+date: "4/28/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(scales)
+library(gridExtra)
+library(WGCNA)
+```
+
+## *Protobothrops mucrosquamatus* (Taiwan habu)
+
+```{r}
+taiwan_venom <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% filter(tissue == "venom gland") %>% group_by(gene) %>% summarize(ref = mean(tpm))
+taiwan_proteome <- read_csv("data/taiwan-secreted.csv", col_types = "-cc", col_names = c("gene", "type"))
+rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan1"),
+read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan11"),
+read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan2"),
+read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id = "taiwan3")) %>%
+  left_join(read_tsv("ref/genes.txt", col_names = c("target_id", "gene"), col_types = "cc")) %>% na.omit() %>%
+  group_by(gene, id) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) -> taiwan
+taiwan_merged <- left_join(taiwan, taiwan_venom) %>% left_join(taiwan_proteome) 
+
+taiwan_merged %>% na.omit() %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
+taiwan_merged %>% filter(id == "taiwan2" & est_counts > 1) %>% na.omit() # taiwan2 library doesn't work well
+
+p1 <- taiwan_merged %>% na.omit() %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+p1
+```
+
+### Module preservation in Taiwan habu data
+```{r modules, cache=T, eval = F}
+metavenom <- read_csv("data/metavenom.csv", col_types = "cnnnc")
+
+taiwan_venom_matrix <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% filter(tissue == "venom gland") %>% mutate(tpm = log(1+tpm)) %>% select(library, gene, tpm) %>% pivot_wider(names_from = gene, values_from = tpm) %>% select(-library)
+
+datExpr <- taiwan %>% select(-est_counts) %>% mutate(tpm = log(1+tpm)) %>% pivot_wider(names_from = gene, values_from = tpm) %>% select(-id)
+
+goodGenes <- goodSamplesGenes(datExpr)
+datExpr <- datExpr[,goodGenes$goodGenes]
+goodGenes2 <- goodSamplesGenes(taiwan_venom_matrix)
+taiwan_venom_matrix <- taiwan_venom_matrix[,goodGenes2$goodGenes]
+multiExpr <- list(venom = list(data = datExpr), gland = list(data = taiwan_venom_matrix))
+multiColor <- list(venom = metavenom$gene)
+mp <- modulePreservation(multiExpr, multiColor, referenceNetworks = 1, nPermutations = 200, randomSeed = 1, quickCor = 0, verbose = 3)
+```
+
+## *Protobothrops flavoviridis* (Okinawa habu)
+
+```{r okinawa}
+okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
+rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
+read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
+read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
+  left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> okinawa
+
+okinawa_merged <- left_join(okinawa_old, okinawa, by =c("Pf" = "target_id"))
+
+okinawa_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
+cor.test(okinawa_old$fpkm, okinawa_old$`frag/len`)
+okinawa_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
+
+p2 <- okinawa_merged %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
+p2
+```
+
+## *Ovophis okinavensis* (Hime habu)
+
+```{r ovophis}
+ovophis_old <- read_tsv("old/ovophis.txt") # protein data from Aird et al.
+rbind(read_tsv("data/10-Hime-Female/abundance.tsv") %>% mutate(id = "hime10"),
+      read_tsv("data/4-Hime-Female/abundance.tsv") %>% mutate(id = "hime4"),
+      read_tsv("data/5-Hime-Female/abundance.tsv") %>% mutate(id = "hime5"),
+read_tsv("data/6-Hime-Female/abundance.tsv") %>% mutate(id = "hime6") ) %>% 
+  left_join(read_tsv("data/ovophis_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> ovophis
+
+ovophis_merged <- left_join(ovophis_old, ovophis, by =c("Oo" = "target_id"))
+
+ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
+cor.test(ovophis_old$fpkm, ovophis_old$`frag/len`)
+ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
+
+p3 <- ovophis_merged %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id))  + geom_line(aes(group = Oo), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Ovophis okinavensis") + theme(plot.title = element_text(face = "italic")) 
+
+p3
+```
+
+```{r final_plot}
+p <- list(p1,p2,p3) %>% map(~.x + labs(x=NULL, y=NULL))
+grid.arrange(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)")
+
+g <- arrangeGrob(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)") 
+ggsave(file="plots/Figure 1 TPM.pdf", g, width = 10, height = 5) 
+```

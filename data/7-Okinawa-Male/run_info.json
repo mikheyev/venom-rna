@@ -1,0 +1,13 @@
+{
+	"n_targets": 58199,
+	"n_bootstraps": 0,
+	"n_processed": 1320576,
+	"n_pseudoaligned": 716517,
+	"n_unique": 558958,
+	"p_pseudoaligned": 54.3,
+	"p_unique": 42.3,
+	"kallisto_version": "0.44.0",
+	"index_version": 10,
+	"start_time": "Thu Apr 29 13:03:04 2021",
+	"call": "kallisto quant -i ../ref/protobothrops -o 7-Okinawa-Male -l 300 -s 100 --single 7-Okinawa-Male_S7_L001_R1_001.fastq.gz"
+}

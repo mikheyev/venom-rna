@@ -1,0 +1,13 @@
+{
+	"n_targets": 58199,
+	"n_bootstraps": 0,
+	"n_processed": 1617679,
+	"n_pseudoaligned": 703362,
+	"n_unique": 570327,
+	"p_pseudoaligned": 43.5,
+	"p_unique": 35.3,
+	"kallisto_version": "0.44.0",
+	"index_version": 10,
+	"start_time": "Thu Apr 29 13:03:39 2021",
+	"call": "kallisto quant -i ../ref/protobothrops -o 8-Okinawa-Female -l 300 -s 100 --single 8-Okinawa-Female_S8_L001_R1_001.fastq.gz"
+}

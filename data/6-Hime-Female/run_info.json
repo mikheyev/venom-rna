@@ -1,0 +1,13 @@
+{
+	"n_targets": 58199,
+	"n_bootstraps": 0,
+	"n_processed": 1596923,
+	"n_pseudoaligned": 511566,
+	"n_unique": 414978,
+	"p_pseudoaligned": 32.0,
+	"p_unique": 26.0,
+	"kallisto_version": "0.44.0",
+	"index_version": 10,
+	"start_time": "Thu Apr 29 17:00:10 2021",
+	"call": "kallisto quant -i ../ref/protobothrops -o 6-Hime-Female -l 300 -s 100 --single 6-Hime-Female_S6_L001_R1_001.fastq.gz"
+}

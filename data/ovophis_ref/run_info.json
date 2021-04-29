@@ -1,0 +1,13 @@
+{
+	"n_targets": 46631,
+	"n_bootstraps": 0,
+	"n_processed": 13572340,
+	"n_pseudoaligned": 10126721,
+	"n_unique": 7271864,
+	"p_pseudoaligned": 74.6,
+	"p_unique": 53.6,
+	"kallisto_version": "0.44.0",
+	"index_version": 10,
+	"start_time": "Thu Apr 29 16:54:39 2021",
+	"call": "kallisto quant -i ../ref/ovophis -o ovophis_ref ovophis/CTTGTA_pe1.fq ovophis/CTTGTA_pe2.fq"
+}
