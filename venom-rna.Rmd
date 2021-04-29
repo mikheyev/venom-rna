@@ -2,7 +2,7 @@
 title: "snake venom mrna"
 author: "Sasha Mikheyev"
 date: "4/28/2021"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ library(WGCNA)
 
 ## *Protobothrops mucrosquamatus* (Taiwan habu)
 
-```{r}
+```{r taiwan, message=F}
 taiwan_venom <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% filter(tissue == "venom gland") %>% group_by(gene) %>% summarize(ref = mean(tpm))
 taiwan_proteome <- read_csv("data/taiwan-secreted.csv", col_types = "-cc", col_names = c("gene", "type"))
 rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan1"),
@@ -51,7 +51,7 @@ mp <- modulePreservation(multiExpr, multiColor, referenceNetworks = 1, nPermutat
 
 ## *Protobothrops flavoviridis* (Okinawa habu)
 
-```{r okinawa}
+```{r okinawa, message=F}
 okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
 rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
 read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
@@ -70,7 +70,7 @@ p2
 
 ## *Ovophis okinavensis* (Hime habu)
 
-```{r ovophis}
+```{r ovophis, message=F}
 ovophis_old <- read_tsv("old/ovophis.txt") # protein data from Aird et al.
 rbind(read_tsv("data/10-Hime-Female/abundance.tsv") %>% mutate(id = "hime10"),
       read_tsv("data/4-Hime-Female/abundance.tsv") %>% mutate(id = "hime4"),
