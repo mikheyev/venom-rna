@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.fastq.gz
+*.h5
+venom-rna_cache/
+venom-rna_files/
+data/ovophis
+data/protobothrops
+ref
+venom-rna.pdf
