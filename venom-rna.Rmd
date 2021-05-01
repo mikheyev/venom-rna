@@ -10,6 +10,7 @@ library(tidyverse)
 library(scales)
 library(gridExtra)
 library(WGCNA)
+# Also need the MASS library, which is not loaded because it conflicts with select
 ```
 
 ## *Protobothrops mucrosquamatus* (Taiwan habu)
@@ -32,7 +33,21 @@ p1 <- taiwan_merged %>% na.omit() %>% filter(est_counts > 1) %>% ggplot(aes(ref,
 p1
 ```
 
+## Principal component analysis
+Note: There is an offset between the venom gland data and the venom, and I'm not sure whether this is due to differences in mapping, coverage, or something else.
+```{r taiwan_pca}
+taiwan_venom2 <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% select(library, gene, tpm) %>% pivot_wider(names_from = library, values_from = tpm)
+taiwan_merged2 <- taiwan %>% filter(est_counts >= 1) %>% select(-est_counts) %>% pivot_wider(names_from = id, values_from= tpm) %>% left_join(taiwan_venom2)
+d <- taiwan_merged2 %>% ungroup %>% select(-gene, -taiwan2, -Pm_5_heart) 
+d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:2000],]
+d <- log(d+1) %>% t() %>% dist()
+fit <- MASS::isoMDS(d, k=2)
+data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep("heart",4), rep("kidney",5), rep("liver", 5), rep("venom gland", 30)) ) %>% ggplot(aes(x,y,color = tissue)) + geom_point() + theme_bw()
+```
+
 ### Module preservation in Taiwan habu data
+NOTE: This does not work at the moment.
+The goal of this analysis is to see whether elements of venom gland gene 
 ```{r modules, cache=T, eval = F}
 metavenom <- read_csv("data/metavenom.csv", col_types = "cnnnc")
 
