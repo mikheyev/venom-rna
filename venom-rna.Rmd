@@ -1,5 +1,5 @@
 ---
-title: "snake venom mrna"
+title: "Examining "
 author: "Sasha Mikheyev"
 date: "4/28/2021"
 output: pdf_document
@@ -8,6 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(scales)
+library(ellipse)
 library(gridExtra)
 library(WGCNA)
 # Also need the MASS library, which is not loaded because it conflicts with select
@@ -15,54 +16,104 @@ library(WGCNA)
 
 ## *Protobothrops mucrosquamatus* (Taiwan habu)
 
+```{r}
+dir = list.dirs("agneesh/all_data/kallisto_results/", full.names = T, recursive = F)
+filename = file.path(dir, "abundance.tsv")
+names <- data.frame(name = filename) %>% separate(name, sep = "//", into = c(NA,"test")) %>% separate(test, sep = "/", into = c("name", NA)) %>% pull(name)
+
+pm <- tibble(target_id = character(), est_counts = numeric(), tpm = numeric(), library = character())
+
+for (j in seq(filename)) pm <- rbind(pm, read_tsv(filename[j]) %>% select(target_id, est_counts, tpm) %>% mutate(library = names[j]))
+```
+
 ```{r taiwan, message=F}
-taiwan_venom <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% filter(tissue == "venom gland") %>% group_by(gene) %>% summarize(ref = mean(tpm))
-taiwan_proteome <- read_csv("data/taiwan-secreted.csv", col_types = "-cc", col_names = c("gene", "type"))
-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan1"),
-read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan11"),
-read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id = "taiwan2"),
-read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id = "taiwan3")) %>%
-  left_join(read_tsv("ref/genes.txt", col_names = c("target_id", "gene"), col_types = "cc")) %>% na.omit() %>%
-  group_by(gene, id) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) -> taiwan
-taiwan_merged <- left_join(taiwan, taiwan_venom) %>% left_join(taiwan_proteome) 
+genes <- read_tsv("ref/genes.txt", col_names = c("target_id", "gene"))
+taiwan_venom <- read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(gene) %>% summarize(tpm = sum(tpm))
+taiwan_proteome <- read_csv("data/taiwan-secreted.csv", col_types = "-nc", col_names = c("gene", "type"))
+rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
+read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan11"),
+read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan2"),
+read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>%
+  left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(library, gene) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) -> taiwan
+taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene")
 
-taiwan_merged %>% na.omit() %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
-taiwan_merged %>% filter(id == "taiwan2" & est_counts > 1) %>% na.omit() # taiwan2 library doesn't work well
+taiwan_merged_venom  %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
+left_join(filter(taiwan, est_counts > 1 & ! gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 
-p1 <- taiwan_merged %>% na.omit() %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+p1 <- taiwan_merged %>% na.omit() %>% filter(est_counts > 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
 p1
 ```
 
 ## Principal component analysis
-Note: There is an offset between the venom gland data and the venom, and I'm not sure whether this is due to differences in mapping, coverage, or something else.
 ```{r taiwan_pca}
-taiwan_venom2 <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% select(library, gene, tpm) %>% pivot_wider(names_from = library, values_from = tpm)
-taiwan_merged2 <- taiwan %>% filter(est_counts >= 1) %>% select(-est_counts) %>% pivot_wider(names_from = id, values_from= tpm) %>% left_join(taiwan_venom2)
-d <- taiwan_merged2 %>% ungroup %>% select(-gene, -taiwan2, -Pm_5_heart) 
-d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:2000],]
+taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(gene, library) %>% summarize(tpm = sum(tpm))
+
+taiwan_merged2 <- rbind(taiwan %>% filter(est_counts >= 1) %>% select(-est_counts), taiwan_venom2) %>% pivot_wider(names_from = library, values_from = tpm) 
+
+d <- taiwan_merged2 %>% ungroup %>% select(-gene, -taiwan2, -P_m_05_heart) 
+d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:5000],]
 d <- log(d+1) %>% t() %>% dist()
 fit <- MASS::isoMDS(d, k=2)
-data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep("heart",4), rep("kidney",5), rep("liver", 5), rep("venom gland", 30)) ) %>% ggplot(aes(x,y,color = tissue)) + geom_point() + theme_bw()
+plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
+
+centroids <- aggregate(cbind(x,y) ~ tissue, plotDat, mean)
+conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
+  data.frame(tissue = as.character(t),
+             ellipse(cov(plotDat[plotDat$tissue == t, 1:2]),
+                     centre=as.matrix(centroids[centroids$tissue == t,2:3]),
+                     level=0.95),
+             stringsAsFactors=FALSE)))
+
+ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")
+ggsave("plots/Figure 2 NMDS.pdf", height=5, width = 6)
 ```
+
+As expected given the lower coverage the venom RNA nests with the venom gland samples
 
 ### Module preservation in Taiwan habu data
-NOTE: This does not work at the moment.
-The goal of this analysis is to see whether elements of venom gland gene 
-```{r modules, cache=T, eval = F}
-metavenom <- read_csv("data/metavenom.csv", col_types = "cnnnc")
+```{r modules, eval = F}
+modules <- read_csv(file = "data/modules.csv")
 
-taiwan_venom_matrix <- read_csv("data/rsem.csv.gz", col_types = "ccnncnccc") %>% filter(tissue == "venom gland") %>% mutate(tpm = log(1+tpm)) %>% select(library, gene, tpm) %>% pivot_wider(names_from = gene, values_from = tpm) %>% select(-library)
+taiwan_venom_matrix <-  rbind(read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% select(-est_counts),
+      rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
+            read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan11"),
+            read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>% 
+        filter(est_counts > 1) %>% select(target_id, library, tpm) %>%
+        mutate(tpm = log(1+tpm)) %>% select(library, target_id, tpm)) %>% 
+        pivot_wider(names_from = target_id, values_from = tpm)
 
-datExpr <- taiwan %>% select(-est_counts) %>% mutate(tpm = log(1+tpm)) %>% pivot_wider(names_from = gene, values_from = tpm) %>% select(-id)
+taiwan_venom_matrix2 <- taiwan_venom_matrix[,intersect(modules$target_id, colnames(taiwan_venom_matrix)[colSums(is.na(taiwan_venom_matrix)) == 0])]
+gsg <- goodSamplesGenes(taiwan_venom_matrix2)
+gsg$allOK
 
-goodGenes <- goodSamplesGenes(datExpr)
-datExpr <- datExpr[,goodGenes$goodGenes]
-goodGenes2 <- goodSamplesGenes(taiwan_venom_matrix)
-taiwan_venom_matrix <- taiwan_venom_matrix[,goodGenes2$goodGenes]
-multiExpr <- list(venom = list(data = datExpr), gland = list(data = taiwan_venom_matrix))
-multiColor <- list(venom = metavenom$gene)
-mp <- modulePreservation(multiExpr, multiColor, referenceNetworks = 1, nPermutations = 200, randomSeed = 1, quickCor = 0, verbose = 3)
+goodModules <- modules %>% filter(target_id %in% colnames(taiwan_venom_matrix2)) %>% group_by(colors) %>% summarize(count = n() > 50) %>% filter(count == T) %>% pull(colors) # filter out small modules
+
+keep <- intersect(modules %>% filter(colors %in% goodModules) %>% pull(target_id), colnames(taiwan_venom_matrix2)) 
+
+setLabels <- c("old", "new");
+multiExpr <- list(old = list(data = taiwan_venom_matrix2[1:28, keep]), new = list(data = taiwan_venom_matrix2[29:31, keep]))
+multiColor <- list(old = modules %>% filter(target_id %in% keep) %>% pull(colors))
+
+allowWGCNAThreads(10)
+mp <- modulePreservation(multiExpr, multiColor,
+                         parallelCalculation = T,
+                         referenceNetworks = 1,
+                         checkData = F,
+                         nPermutations = 200,
+                         randomSeed = 1,
+                         verbose = 3)
+
+mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
+
+# empirical p-value of turq
+10^mp$preservation$log.p$ref.old$inColumnsAlsoPresentIn.new$log.psummary.pres[5]
+
 ```
+
+The metavenom module is highly preserved in the venom RNA
 
 ## *Protobothrops flavoviridis* (Okinawa habu)
 
