@@ -48,9 +48,9 @@ tp1
 taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene")
 
 taiwan_merged_venom  %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
-left_join(filter(taiwan, est_counts > 1 & ! gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
+left_join(filter(taiwan, est_counts >= 1 & ! gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 
-p1 <- taiwan_merged %>% na.omit() %>% filter(est_counts > 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
 p1
 ```
 
@@ -61,11 +61,11 @@ taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by
 
 taiwan_merged2 <- rbind(taiwan %>% filter(est_counts >= 1) %>% select(-est_counts), taiwan_venom2) %>% pivot_wider(names_from = library, values_from = tpm) 
 
-d <- taiwan_merged2 %>% ungroup %>% select(-gene, -taiwan2, -P_m_05_heart) 
+d <- taiwan_merged2 %>% ungroup %>% select(-gene,  -P_m_05_heart) 
 d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:5000],]
 d <- log(d+1) %>% t() %>% dist()
 fit <- MASS::isoMDS(d, k=2)
-plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
+plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",4), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
 
 centroids <- aggregate(cbind(x,y) ~ tissue, plotDat, mean)
 conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
@@ -137,11 +137,11 @@ read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>%
 
 okinawa_merged <- left_join(okinawa_old, okinawa, by =c("Pf" = "target_id"))
 
-okinawa_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
+okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, ref), method = "s")
 cor.test(okinawa_old$fpkm, okinawa_old$`frag/len`)
-okinawa_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
+okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
 
-p2 <- okinawa_merged %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
+p2 <- okinawa_merged %>% filter(est_counts >= 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
 p2
 ```
 

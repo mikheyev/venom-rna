@@ -1,13 +1,13 @@
 {
-	"n_targets": 58199,
+	"n_targets": 46631,
 	"n_bootstraps": 0,
-	"n_processed": 1532944,
-	"n_pseudoaligned": 512708,
-	"n_unique": 427124,
-	"p_pseudoaligned": 33.4,
-	"p_unique": 27.9,
+	"n_processed": 54831530,
+	"n_pseudoaligned": 38439498,
+	"n_unique": 33136066,
+	"p_pseudoaligned": 70.1,
+	"p_unique": 60.4,
 	"kallisto_version": "0.44.0",
 	"index_version": 10,
-	"start_time": "Thu Apr 29 16:59:35 2021",
-	"call": "kallisto quant -i ../ref/protobothrops -o 5-Hime-Female -l 300 -s 100 --single 5-Hime-Female_S5_L001_R1_001.fastq.gz"
+	"start_time": "Tue May 25 17:46:48 2021",
+	"call": "kallisto quant -t 10 -i ovophis -o 5-Hime-Female 5-Hime-Female_1.fastq.gz 5-Hime-Female_2.fastq.gz"
 }

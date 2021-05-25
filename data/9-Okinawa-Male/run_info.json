@@ -1,13 +1,13 @@
 {
 	"n_targets": 58199,
 	"n_bootstraps": 0,
-	"n_processed": 1212118,
-	"n_pseudoaligned": 534467,
-	"n_unique": 435263,
-	"p_pseudoaligned": 44.1,
-	"p_unique": 35.9,
+	"n_processed": 44469999,
+	"n_pseudoaligned": 30058828,
+	"n_unique": 25312387,
+	"p_pseudoaligned": 67.6,
+	"p_unique": 56.9,
 	"kallisto_version": "0.44.0",
 	"index_version": 10,
-	"start_time": "Thu Apr 29 13:04:06 2021",
-	"call": "kallisto quant -i ../ref/protobothrops -o 9-Okinawa-Male -l 300 -s 100 --single 9-Okinawa-Male_S9_L001_R1_001.fastq.gz"
+	"start_time": "Tue May 25 17:35:07 2021",
+	"call": "kallisto quant -t 10 -i protobothrops -o 9-Okinawa-Male 9-Okinawa-Male_1.fastq.gz 9-Okinawa-Male_2.fastq.gz"
 }

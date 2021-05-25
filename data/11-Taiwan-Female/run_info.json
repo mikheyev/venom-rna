@@ -1,13 +1,13 @@
 {
 	"n_targets": 24323,
 	"n_bootstraps": 0,
-	"n_processed": 1246311,
-	"n_pseudoaligned": 562334,
-	"n_unique": 419342,
-	"p_pseudoaligned": 45.1,
-	"p_unique": 33.6,
+	"n_processed": 51215432,
+	"n_pseudoaligned": 31505971,
+	"n_unique": 26280822,
+	"p_pseudoaligned": 61.5,
+	"p_unique": 51.3,
 	"kallisto_version": "0.44.0",
 	"index_version": 10,
-	"start_time": "Wed Apr 28 21:41:15 2021",
-	"call": "kallisto quant -i ../ref/taiwan -o 11-Taiwan-Female -l 300 -s 100 --single 11-Taiwan-Female_S11_L001_R1_001.fastq.gz"
+	"start_time": "Tue May 25 17:15:54 2021",
+	"call": "kallisto quant -t 10 -i taiwan -o 11-Taiwan-Female 11-Taiwan-Female_1.fastq.gz 11-Taiwan-Female_2.fastq.gz"
 }
