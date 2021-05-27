@@ -1,0 +1,100 @@
+---
+title: "Analysis_section"
+author: "Agneesh Barua"
+date: "5/27/2021"
+output: html_document
+---
+
+```{r,library,warning=FALSE,message=FALSE, include=FALSE}
+library(edgeR)
+library(tidyverse)
+library(DESeq2)
+library(kableExtra)
+library(scales)
+library(ellipse)
+options(stringsAsFactors = FALSE)
+```
+
+load data
+```{r}
+#RNA from venom
+Pm_tpm<-read.csv("./higher_depth_data/high_depth_habu_tpm.csv")
+#Human-habu_modules from orgin of specialisation study
+habu_human_modules<-read.csv("./exp-data/all_data_tpmKeep_modules.csv")
+#filter out muscle module
+habu_human_modules<-habu_human_modules %>% filter(colors == "yellow")
+#Pm remapped data from venom gland
+Pm_remapped<-read.csv("./exp-data/Re_mapped_exp.csv")
+```
+
+process data
+```{r}
+#remove muscle module
+Pm_tpm<-Pm_tpm %>% filter(!target_id %in% habu_human_modules$habu_target_id)
+
+#filter low reads
+keep<-reshape::melt(Pm_tpm, id="target_id") %>% group_by(target_id) %>% 
+  summarize(tpm = mean(value)) %>% filter(tpm >2) %>% dplyr::select(target_id) #filter genes with mean<2tpm in all libs
+
+tpmKeep<-Pm_tpm %>% filter(target_id %in% keep$target_id) %>% column_to_rownames('target_id')
+```
+
+## diagnostics
+```{r}
+dge<-DGEList(tpmKeep)
+dge<-calcNormFactors(dge)
+mds <- plotMDS(dge)
+```
+
+```{r}
+tpmKeep<-Pm_tpm %>% filter(target_id %in% keep$target_id)
+
+Pm_remapped<-Pm_remapped %>% filter(target_id %in% tpmKeep$target_id) %>% select(c(-new_Pm1_f,-new_Pm2_f,-new_Pm3_m,-new_Pm4_f)) #remove old (low depth data)
+
+All_exp_data<-Pm_remapped %>% cbind(new_Pm1_f = tpmKeep$Pm_1_f,new_Pm2_f = tpmKeep$Pm_2_f,new_Pm3_m = tpmKeep$Pm_3_m,new_Pm4_f = tpmKeep$Pm_4_f) %>% column_to_rownames('target_id')
+
+
+d <- All_exp_data %>%  select(-Pm_5_hrt) 
+d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:6000],]
+d <- log(d+1) %>% t() %>% dist()
+fit <- MASS::isoMDS(d, k=2)
+plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], 
+                      tissue = c(rep("venom gland", 28), 
+                                 rep("heart",3), 
+                                 rep("kidney",4), 
+                                 rep("liver",4),
+                                 rep("venom",4))) 
+
+centroids <- aggregate(cbind(x,y) ~ tissue, plotDat, mean)
+conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
+  data.frame(tissue = as.character(t),
+             ellipse(cov(plotDat[plotDat$tissue == t, 1:2]),
+                     centre=as.matrix(centroids[centroids$tissue == t,2:3]),
+                     level=0.95),
+             stringsAsFactors=FALSE)))
+
+tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
+tp2
+```
+
+### Correlation btween new venom libraries and old ones
+```{r}
+dat<-All_exp_data  %>% rownames_to_column("gene_id") %>% group_by(gene_id) %>% 
+  summarise(venom_gland=mean(Pm_3:Pm_30),venom_rna = mean(new_Pm1_f:new_Pm4_f)) %>% column_to_rownames("gene_id") %>% 
+  filter(c(venom_gland >=0.05),venom_rna>=0.05) #removes ~2000 points mostly low expression and noisy
+  
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+```
+
+```{r}
+ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "darkgreen")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+
+```
