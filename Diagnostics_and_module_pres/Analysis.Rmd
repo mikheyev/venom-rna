@@ -12,19 +12,20 @@ library(DESeq2)
 library(kableExtra)
 library(scales)
 library(ellipse)
+library(statmod)
 options(stringsAsFactors = FALSE)
 ```
 
 load data
 ```{r}
 #RNA from venom
-Pm_tpm<-read.csv("./higher_depth_data/high_depth_habu_tpm.csv")
+Pm_tpm<-read.csv("../data/high_depth_habu_tpm.csv")
 #Human-habu_modules from orgin of specialisation study
-habu_human_modules<-read.csv("./exp-data/all_data_tpmKeep_modules.csv")
+habu_human_modules<-read.csv("../data/all_data_tpmKeep_modules.csv")
 #filter out muscle module
 habu_human_modules<-habu_human_modules %>% filter(colors == "yellow")
 #Pm remapped data from venom gland
-Pm_remapped<-read.csv("./exp-data/Re_mapped_exp.csv")
+Pm_remapped<-read.csv("../data/Re_mapped_exp.csv")
 ```
 
 process data
@@ -81,13 +82,13 @@ tp2
 ```{r}
 dat<-All_exp_data  %>% rownames_to_column("gene_id") %>% group_by(gene_id) %>% 
   summarise(venom_gland=mean(Pm_3:Pm_30),venom_rna = mean(new_Pm1_f:new_Pm4_f)) %>% column_to_rownames("gene_id") %>% 
-  filter(c(venom_gland >=0.05),venom_rna>=0.05) #removes ~2000 points mostly low expression and noisy
+  filter(venom_gland >=0.05,venom_rna>=0.05) #removes ~2000 points mostly low expression and noisy
   
 cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
 ```
 
 ```{r}
-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
   geom_point()+
   scale_color_gradient2(low = "black",mid = "grey80",high = "darkgreen")+
   scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
@@ -96,5 +97,102 @@ ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) +
   ylab("Venom RNA (log TPM)")+
   geom_smooth(method = lm,se=T)+
   theme_bw()
+
+cor_plot
+```
+
+
+```{r,eval=FALSE}
+gridExtra::grid.arrange(cor_plot,tp2) %>% ggsave(file="./cor_plot_and_PCA_mucle_removed.pdf", width = 10, height = 10) 
+```
+### Differential expression analysis
+```{r,eval=FALSE}
+venom_counts<-read.csv("./higher_depth_data/high_depth_habu_counts.csv")
+
+dir = list.dirs("./exp-data/Re_mapped_data/kallisto_results/", full.names = T, recursive = F)
+filename = file.path(dir, "abundance.tsv")
+names <- data.frame(name = filename) %>% separate(name, sep = "//", into = c(NA,"test")) %>% separate(test, sep = "/", into = c("name", NA)) %>% pull(name)
+
+dir = list.dirs("./exp-data/Re_mapped_data/kallisto_results", full.names = T, recursive = F)
+filename = file.path(dir, "abundance.tsv")
+
+pm <- tibble(target_id = character(), est_counts = numeric(), tpm = numeric(), library = character())
+for (j in seq(filename)) pm <- rbind(pm, read_tsv(filename[j]) %>% select(target_id, est_counts) %>% mutate(library = names[j]))
+pm_counts<-pm %>% spread(key = library, value = est_counts)
+venom_counts<-cbind(venom_counts,pm_counts[,14:41]) %>% filter(!target_id %in%habu_human_modules$habu_target_id)#removing muscle module
+venom_counts %>% write.csv("./venom_counts.csv")
+```
+
+### DGE object
+```{r}
+venom_counts<-read.csv("../data/venom_counts.csv")
+venom_counts$X<-NULL
+groups<-factor(c(rep("venom",4),rep("venom_gland",28)))
+dge<-DGEList(venom_counts %>% column_to_rownames("target_id"), group = groups, genes = rownames(venom_counts$target_id))
+dge
+```
+
+#### Preprosessing
+```{r}
+keep<- filterByExpr(dge, min.count = 100)                 
+summary(keep)
+dge<- dge[keep,,keep.lib.sizes = F]
+```
+
+Normalise using TMM: Done for removing compositional bias
+```{r}
+dge<-calcNormFactors(dge, method = "TMM")
+dge$samples
+```
+
+```{r}
+plotMD(cpm(dge, log = T),column =4)
+plotMDS(dge)
+```
+
+
+#### Estimate dispersion {.tabset .tabset-fade}
+```{r}
+#to estimate dispersions with multiple factors we donstruct a design matrix. 0+ means not to include an intercept
+design <- model.matrix(~0+group, dge$samples)
+colnames(design)<-levels(dge$samples$group)
+dge<-estimateDisp(dge, design, robust = T)
+dge$common.dispersion
+plotBCV(dge)
+```
+
+#### Determining quasi liklihood 
+```{r}
+fit<-glmQLFit(dge, design, robust = T)
+head(fit$coefficients)
+plotQLDisp(fit)
+```
+
+## Differential expression analysis
+```{r}
+con<-makeContrasts(venom-venom_gland, levels = design)
+qlf<- glmQLFTest(fit,contrast=con)
+```
+###### QLF-test
+```{r}
+summary(decideTests(qlf))
+plotMD(qlf)
+```
+###### 1.2 log fold change
+```{r}
+#get genes that have a log fold change of 1.2
+tr<-glmTreat(fit,contrast = con, lfc = log2(1.2))
+summary(decideTests(tr))
+plotMD(tr)
+```
+#### What are the genes?
+```{r}
+up_reg<-tr$table %>% filter(PValue <= 0.05) %>% filter(logFC >=1.2) %>% arrange(desc(logFC)) %>% rownames_to_column('target_id') %>%  write.csv("./upregulated_in_venom.csv")
+down_reg<-tr$table %>% filter(PValue <= 0.05) %>% filter(logFC <=1.2) %>% arrange((logFC))  %>% rownames_to_column('target_id')  %>% write.csv("./downregulated_in_venom.csv")
+
+habu_human_modules<-read.csv("./exp-data/all_data_tpmKeep_modules.csv")
+habu_human_modules %>% filter(habu_target_id %in% up_reg$target_id) %>% write.csv("./upregulated_in_venom_orthologs.csv")
+habu_human_modules %>% filter(habu_target_id %in% down_reg$target_id) %>% write.csv("./downregulated_in_venom_orthologs.csv")
+
 
 ```
