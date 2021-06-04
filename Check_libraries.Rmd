@@ -1,0 +1,285 @@
+---
+title: "check_libraries"
+author: "Agneesh Barua"
+date: "6/4/2021"
+output: html_document
+---
+
+```{r}
+library(edgeR)
+library(tidyverse)
+library(DESeq2)
+library(kableExtra)
+library(scales)
+library(ellipse)
+library(statmod)
+library(GOstats)
+library(GO.db)
+library(GSEABase)
+```
+
+#### Load data
+```{r}
+Pm_tpm_exp<-read.csv("./data/high_depth_habu_tpm.csv")
+pm<-readRDS("./data/pm.RDS")
+pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
+pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
+```
+
+#### Do all libraries exhibit the same trend i.e. is there s difference between libraries post venom extraction?
+
+### 1 day post extraction
+```{r}
+pm_tpm_1_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_3,Pm_4,Pm_5,Pm_6)
+dat<-pm_tpm_1_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_3:Pm_6),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 2 day post extraction
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_10,Pm_11,Pm_12,Pm_13)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_10:Pm_13),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 2 day post extraction (second set)
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_30,Pm_7,Pm_8,Pm_9)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_30:Pm_9),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 4 day post extraction
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_14,Pm_15,Pm_16,Pm_17)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_14:Pm_17),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 4 day post extraction (second set)
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_18,Pm_19,Pm_20,Pm_21)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_18:Pm_21),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 8 day post extraction
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_22,Pm_23,Pm_24,Pm_25)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_22:Pm_25),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+### 8 day post extraction (second set)
+```{r}
+pm_tpm_2_day<-pm_tpm %>% dplyr::select(target_id,Pm_1_f,Pm_2_f,Pm_3_m,Pm_4_f,
+                                               Pm_26,Pm_27,Pm_28,Pm_29)
+dat<-pm_tpm_2_day %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_26:Pm_29),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+cor.test(log10(dat$venom_gland),log10(dat$venom_rna), method = "spearman")
+
+cor_plot<-ggplot(dat,aes(x=(venom_gland),y=(venom_rna),color = log10(venom_rna))) + 
+  geom_point()+
+  scale_color_gradient2(low = "black",mid = "grey80",high = "#D2420C")+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  geom_smooth(method = lm,se=T)+
+  theme_bw()
+cor_plot
+
+```
+
+#### Where are venom toxins?
+Since all libraries exhibit bimodal sturcture, we'll use a mean of all of them in our analysis to better represent a dynamic venom gland profile.
+
+Venoms toxins well represented in both venom RNA and the gland
+```{r}
+dat<-pm_tpm %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+
+toxins<-read.csv("./data/toxins.csv")
+
+dat_toxins<-dat %>% mutate(toxins= dat$target_id %in% toxins$Transcripts) 
+
+cor_plot_toxins<-ggplot(dat_toxins,aes(x=venom_gland,y=venom_rna,color = toxins,group=toxins)) + 
+  geom_point(aes(shape = toxins))+
+  scale_shape_manual(values=c(1,19))+
+  scale_color_manual(values=c("lightgrey", "#D2420C"))+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x)))+ 
+  scale_x_log10(labels=trans_format('log10',math_format(10^.x)))+
+  xlab("Venom gland RNA (log TPM)")+ 
+  ylab("Venom RNA (log TPM)")+
+  labs(subtitle = "Venom reads in data")+
+  theme_bw()+ 
+  theme(legend.position = c(0.099, 0.88))+ 
+  theme(legend.key = element_rect(fill = NA), 
+    legend.background = element_rect(fill = NA))
+cor_plot_toxins
+
+
+```
+
+#### What is expressed in venom but not gland?
+We used a cut-off of at least 10 tpm to reduce noise and identify actual genes individually expressed in both venom and venom gland.
+```{r}
+dat<-pm_tpm %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(Pm_1_f:Pm_4_f))
+
+in_venom_not_in_gland<-dat %>% filter(venom_gland == 0) %>% filter(venom_rna >= 10) %>% arrange(desc(venom_rna)) %>% select(-venom_gland)
+
+in_gland_not_in_venom<-dat %>% filter(venom_rna == 0) %>% filter(venom_gland >= 10) %>% arrange(desc(venom_gland)) %>% select(-venom_rna)
+
+dat<-pm_tpm %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(Pm_1_f:Pm_4_f))
+
+dat_in_venom<-dat %>% mutate(in_venom= dat$target_id %in% in_venom_not_in_gland$target_id)
+```
+
+#### What cellular components are in the venom and not the venom gland?
+Mostly consists of components responsible for protein migration and other extrcellular components.
+```{r,eval=FALSE}
+annot<-read.csv("./data/Pm_GO_List.csv") # GO term list
+in_venom_only<-read.csv("./data/in_venom_not_in_gland_gene_id.csv")
+
+annot<-annot %>% mutate(evidence = "IEA") %>% dplyr::select(go_id= GO.ids, evidence, gene=Gene_id)
+
+goFrame<-GOFrame(as.data.frame(annot, organism = "Pm"))
+goAllFrame<-GOAllFrame(goFrame)
+
+gsc <-GeneSetCollection(goAllFrame, setType = GOCollection())
+
+universe <- as.character(annot$gene) # total set of genes with GO terms
+
+genes<-as.character(in_venom_only$Gene.ID) # genes in out sample
+
+#test
+params <- GSEAGOHyperGParams(name = "Pm GO enrich", 
+                             geneSetCollection = gsc,
+                             geneIds = genes,
+                             universeGeneIds = universe,
+                             ontology = "CC",
+                             pvalueCutoff = 0.05,
+                             conditional = F,
+                             testDirection = "over")
+Over<- hyperGTest(params)
+
+summary(Over) %>% arrange(Pvalue)
+```
+
+#### What cellular components are in the venom gland and not the venom?
+Mostly consists of intracellular, cytoplasmic, and cell structure components.
+```{r,eval=FALSE}
+annot<-read.csv("./data/Pm_GO_List.csv") # GO term list
+in_gland_only<-read.csv("./data/in_gland_not_in_venom_gene_id.csv")
+
+annot<-annot %>% mutate(evidence = "IEA") %>% dplyr::select(go_id= GO.ids, evidence, gene=Gene_id)
+
+goFrame<-GOFrame(as.data.frame(annot, organism = "Pm"))
+goAllFrame<-GOAllFrame(goFrame)
+
+gsc <-GeneSetCollection(goAllFrame, setType = GOCollection())
+
+universe <- as.character(annot$gene) # total set of genes with GO terms
+
+genes<-as.character(in_gland_only$gene_id) # genes in out sample
+
+#test
+params <- GSEAGOHyperGParams(name = "Pm GO enrich", 
+                             geneSetCollection = gsc,
+                             geneIds = genes,
+                             universeGeneIds = universe,
+                             ontology = "CC",
+                             pvalueCutoff = 0.05,
+                             conditional = F,
+                             testDirection = "over")
+Over<- hyperGTest(params)
+
+summary(Over) %>% arrange(Pvalue)
+```
