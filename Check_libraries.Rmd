@@ -28,7 +28,7 @@ read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
 read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
   left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% dplyr::select(ref, target_id), by = c("target_id")) -> okinawa
 
-t<-okinawa %>% dplyr::select(target_id,tpm,id) %>% spread(id,tpm) %>% column_to_rownames('target_id') %>% round()
+t<-okinawa %>% dplyr::select(target_id,tpm,id) %>% spread(id,tpm) %>% column_to_rownames('target_id') 
 
 GGally::ggpairs(log10(t+1))
 
@@ -37,16 +37,20 @@ GGally::ggpairs(log10(t+1))
 
 ## *Taiwan habu*
 ```{r,message=F}
-Pm_tpm_exp<-read.csv("./data/high_depth_habu_tpm.csv")
+Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
+      read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
+      read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
+      read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
+  dplyr::select(target_id,tpm,id) %>% spread(id,tpm)
 pm<-readRDS("./data/pm.RDS")
 pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
 pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
 
-GGally::ggpairs(log10(round(pm_tpm[,2:5])+1))
+GGally::ggpairs(log10(pm_tpm[,2:5]+1))
 
 ```
 
-#### Do all libraries exhibit the same trend i.e. is there s difference between libraries post venom extraction?
+#### Do all libraries exhibit the same trend i.e. is there a difference between libraries post venom extraction?
 
 ### 1 day post extraction
 ```{r}
