@@ -19,11 +19,31 @@ library(GSEABase)
 ```
 
 #### Load data
+
+## *Okinawa habu*
 ```{r}
+okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
+rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
+read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
+read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
+  left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% dplyr::select(ref, target_id), by = c("target_id")) -> okinawa
+
+t<-okinawa %>% dplyr::select(target_id,tpm,id) %>% spread(id,tpm) %>% column_to_rownames('target_id') %>% round()
+
+GGally::ggpairs(log10(t+1))
+
+```
+
+
+## *Taiwan habu*
+```{r,message=F}
 Pm_tpm_exp<-read.csv("./data/high_depth_habu_tpm.csv")
 pm<-readRDS("./data/pm.RDS")
 pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
 pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
+
+GGally::ggpairs(log10(round(pm_tpm[,2:5])+1))
+
 ```
 
 #### Do all libraries exhibit the same trend i.e. is there s difference between libraries post venom extraction?
