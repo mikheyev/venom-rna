@@ -46,7 +46,7 @@ pm<-readRDS("./data/pm.RDS")
 pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
 pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
 
-GGally::ggpairs(log10(pm_tpm[,2:5]+1))
+GGally::ggpairs(log10(pm_tpm[,2:8]+1))
 
 ```
 
