@@ -51,7 +51,7 @@ GGally::ggpairs(log10(pm_tpm[,2:8]+1))
 ```
 
 The Taiwan habu libraries are of poor quality. We need to filter out low reads.
-Even with a filter of >=5 tpm the cor between vRNA and agRNA doesn't get better. There is still a difference in the RNA found in the venom gland vs the venom. 
+Even with a filter of >=5 tpm the cor between vRNA and agRNA doesn't get better. There is still a difference in the RNA found in the venom gland vs the venom. This difference is not surprising, and in fact expected because the venom is a secretion and does not contain cellular and nuclear components. 
 ```{r,message=F}
 high_tpm_genes<-pm_tpm[,1:5] %>% group_by(target_id) %>% summarise(mean_tpm=mean(taiwan1:taiwan3)) %>% filter(mean_tpm >=5)
 
@@ -256,6 +256,17 @@ How well does vRNA model vgRNA?
 vRNA seems to model vgRNA pretty well.Adjusted R^2 = 0.538, explains at least 50% of the variation in the data. Diagnostics revel model fits well.
 ```{r}
 dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
+
+dat_toxins %>% ggplot()+
+  geom_point(aes(x=target_id, y=venom_rna,color="venom"))+
+  geom_line(aes(x=target_id,y=venom_rna,group =1), color="#6B1EE1")+
+  geom_point(aes(x=target_id, y=venom_gland,color="gland"))+
+  geom_line(aes(x=target_id,y=venom_gland,group=1), color="#94E11E")+
+  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
+  scale_y_log10()+
+  theme_classic()
+
+cor(dat_toxins$venom_gland,dat_toxins$venom_rna, method = 's')
 
 plot(log10(dat_toxins$venom_gland),log10(dat_toxins$venom_rna))
 
