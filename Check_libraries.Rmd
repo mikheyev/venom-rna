@@ -7,7 +7,6 @@ output: html_document
 
 ```{r}
 library(edgeR)
-library(tidyverse)
 library(DESeq2)
 library(kableExtra)
 library(scales)
@@ -16,17 +15,64 @@ library(statmod)
 library(GOstats)
 library(GO.db)
 library(GSEABase)
+library(tidyverse)
 ```
 
 #### Load data
+
+## *Protobothrops flavoviridis* (Okinawa habu)
 ```{r}
-Pm_tpm_exp<-read.csv("./data/high_depth_habu_tpm.csv")
+okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
+rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
+read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
+read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
+  left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% dplyr::select(ref, target_id), by = c("target_id")) -> okinawa
+
+t<-okinawa %>% dplyr::select(target_id,tpm,id) %>% spread(id,tpm) %>% column_to_rownames('target_id') 
+
+GGally::ggpairs(log10(t+1))
+
+```
+
+
+## *Taiwan habu*
+```{r,message=F}
+Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
+      read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
+      read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
+      read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
+  dplyr::select(target_id,tpm,id) %>% spread(id,tpm)
 pm<-readRDS("./data/pm.RDS")
 pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
 pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
+
+GGally::ggpairs(log10(pm_tpm[,2:8]+1))
+
 ```
 
-#### Do all libraries exhibit the same trend i.e. is there s difference between libraries post venom extraction?
+The Taiwan habu libraries are of poor quality. We need to filter out low reads.
+Even with a filter of >=5 tpm the cor between vRNA and agRNA doesn't get better. There is still a difference in the RNA found in the venom gland vs the venom. 
+```{r,message=F}
+high_tpm_genes<-pm_tpm[,1:5] %>% group_by(target_id) %>% summarise(mean_tpm=mean(taiwan1:taiwan3)) %>% filter(mean_tpm >=5)
+
+pm_tpm_filtered<-pm_tpm %>% filter(target_id %in% high_tpm_genes$target_id)
+
+GGally::ggpairs(log10(pm_tpm_filtered[,2:8]+1))
+
+```
+What are the most abundantly expressed genes in the vRNA?
+Even the most abundant genes in the vRNA are not correlated with vgRNA. That means the vRNA is capturing different biology than the vgRNA
+```{r, message=FALSE}
+high_tpm_genes_1000<-high_tpm_genes  %>% filter(mean_tpm>=1000) %>% arrange(desc(mean_tpm)) # 173 genes with tpm >= 1000
+#what are these genes?
+
+pm_tpm_filtered_1000tpm<-pm_tpm %>% filter(target_id %in% high_tpm_genes_1000$target_id)
+
+GGally::ggpairs(log10(pm_tpm_filtered_1000tpm[,2:8]+1))
+
+```
+
+#### Do all libraries exhibit the same trend i.e. is there a difference between libraries post venom extraction?
 
 ### 1 day post extraction
 ```{r}
@@ -182,7 +228,8 @@ Since all libraries exhibit bimodal sturcture, we'll use a mean of all of them i
 Venoms toxins well represented in both venom RNA and the gland
 ```{r}
 dat<-pm_tpm %>% group_by(target_id) %>% 
-  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(Pm_1_f:Pm_4_f)) %>% filter(venom_gland >=0.01,venom_rna>=0.01)
+  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(taiwan1:taiwan3)) %>% 
+  filter(venom_gland >=0.01,venom_rna>=0.01) #filter to remove low exp genes hugging the axis to improve readability
 
 toxins<-read.csv("./data/toxins.csv")
 
@@ -203,6 +250,21 @@ cor_plot_toxins<-ggplot(dat_toxins,aes(x=venom_gland,y=venom_rna,color = toxins,
     legend.background = element_rect(fill = NA))
 cor_plot_toxins
 
+
+```
+How well does vRNA model vgRNA?
+vRNA seems to model vgRNA pretty well.Adjusted R^2 = 0.538, explains at least 50% of the variation in the data. Diagnostics revel model fits well.
+```{r}
+dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
+
+plot(log10(dat_toxins$venom_gland),log10(dat_toxins$venom_rna))
+
+fit<-lm(log10(dat_toxins$venom_gland)~log10(dat_toxins$venom_rna))
+
+summary(fit)
+plot(fit)
+ggplot(fit, aes(fit$residuals)) + 
+  geom_histogram(bins = 5)
 
 ```
 
