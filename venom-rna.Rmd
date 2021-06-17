@@ -12,6 +12,7 @@ library(ellipse)
 library(gridExtra)
 library(grid)
 library(WGCNA)
+library(GGally) #pairs
 # Also need the MASS library, which is not loaded because it conflicts with select
 ```
 
@@ -39,10 +40,10 @@ read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>
   left_join(genes, by = "target_id") %>% na.omit() %>% 
   group_by(library, gene) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) -> taiwan
 
-averaged_data <- left_join(taiwan %>% group_by(gene) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)), taiwan_venom %>% group_by(gene) %>% summarize(tpm = sum(tpm)), by = "gene") 
+averaged_data <- left_join(taiwan %>% filter(est_counts > 3) %>%
+                             group_by(gene) %>% summarize(tpm = mean(tpm), est_counts = mean(est_counts)), taiwan_venom %>% group_by(gene) %>% summarize(tpm = mean(tpm)), by = "gene") 
 with(averaged_data, cor.test(tpm.x, tpm.y, method = "s"))
-tp1 <- averaged_data %>% ggplot(aes(tpm.y, tpm.x, color = log10(est_counts ))) + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + theme(legend.position = 'bottom')
-
+tp1 <- averaged_data %>% ggplot(aes(tpm.y, tpm.x, color = log10(est_counts +1 ))) + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + theme(legend.position = 'bottom')
 tp1
 
 taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene")
@@ -54,18 +55,30 @@ p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(a
 p1
 ```
 
+## Investigating RNA levels in 
+
+```{r}
+taiwan %>% filter(tpm > 1) %>%
+  select(-est_counts) %>% 
+  mutate(tpm = log(1+tpm)) %>% pivot_wider(names_from =  library, values_from = tpm) %>%
+  select(-taiwan2) %>%
+  filter(!if_any(everything(), is.na)) %>%
+  ggpairs(columns = 2:4)
+```
+
 ## Principal component analysis
 ```{r taiwan_pca}
 taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
-  group_by(gene, library) %>% summarize(tpm = sum(tpm))
+  group_by(gene, library) %>% summarize(tpm = sum(tpm)) 
 
-taiwan_merged2 <- rbind(taiwan %>% filter(est_counts >= 1) %>% select(-est_counts), taiwan_venom2) %>% pivot_wider(names_from = library, values_from = tpm) 
+taiwan_merged2 <- rbind(taiwan %>% filter(tpm >= 2) %>% select(-est_counts), taiwan_venom2) %>% 
+  pivot_wider(names_from = library, values_from = tpm) 
 
-d <- taiwan_merged2 %>% ungroup %>% select(-gene,  -P_m_05_heart) 
+d <- taiwan_merged2 %>% ungroup %>% select(-gene,  -P_m_05_heart, -taiwan2) 
 d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:5000],]
 d <- log(d+1) %>% t() %>% dist()
 fit <- MASS::isoMDS(d, k=2)
-plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",4), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
+plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
 
 centroids <- aggregate(cbind(x,y) ~ tissue, plotDat, mean)
 conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
@@ -91,6 +104,7 @@ modules <- read_csv(file = "data/modules.csv")
 taiwan_venom_matrix <-  rbind(read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% select(-est_counts),
       rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
             read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan11"),
+            read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan2"),
             read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>% 
         filter(est_counts > 1) %>% select(target_id, library, tpm) %>%
         mutate(tpm = log(1+tpm)) %>% select(library, target_id, tpm)) %>% 
