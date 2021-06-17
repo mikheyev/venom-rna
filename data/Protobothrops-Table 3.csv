@@ -1,0 +1,79 @@
+ID,Toxin Class,FPKM,% FPKM,Summary
+comp72_c0_seq1,3F,737.3,0.16%,0.16%
+comp61_c0_seq1,5‘NTase,553.7,0.12%,0.12%
+comp656_c0_seq1,APA,16.8,0.00%,0.00%
+comp155_c0_seq1,BPP,211.5,0.05%,0.05%
+comp822_c0_seq1,CRISP,30.4,0.01%,2.67%
+comp10_c0_seq1,CRISP EGF,"12,468.80",2.66%,
+comp11_c0_seq6,CTL01,"4,121.00",0.88%,4.99%
+comp11_c0_seq4,CTL02,"2,905.50",0.62%,
+comp11_c0_seq3,CTL03,"2,423.30",0.52%,
+comp32_c0_seq1,CTL04,"2,216.90",0.47%,
+comp11_c0_seq8,CTL05,"2,051.80",0.44%,
+comp11_c0_seq7,CTL06,"1,947.60",0.42%,
+comp32_c0_seq2,CTL07,"1,840.40",0.39%,
+comp11_c0_seq1,CTL08,"1,705.50",0.36%,
+comp50_c0_seq1,CTL09,"1,689.10",0.36%,
+comp11_c0_seq5,CTL10,531,0.11%,
+comp11_c0_seq10,CTL11,766.3,0.16%,
+comp11_c0_seq2,CTL12,"1,145.00",0.25%,
+comp1084_c0_seq1,DPP IV,32.5,0.01%,0.01%
+comp213_c0_seq1,GBL,311.5,0.07%,0.07%
+comp249_c0_seq1,GC1,24.8,0.01%,0.03%
+comp249_c0_seq2,GC2,25.3,0.01%,
+comp249_c0_seq3,GC3,35.4,0.01%,
+comp249_c0_seq4,GC4,36.4,0.01%,
+comp271_c0_seq1,HYAL,127,0.03%,0.03%
+comp3_c0_seq1,LAO,"9,002.90",1.92%,5.28%
+comp3_c0_seq2,LAO,"15,709.20",3.36%,
+comp1_c0_seq2,MP01 P-II,"44,313.90",9.47%,35.20%
+comp6_c0_seq1,MP02 P-II,"34,770.90",7.43%,
+comp14_c0_seq1,MP03 P-III,"9,377.10",2.00%,
+comp23_c0_seq1,MP04a P-III,"6,685.30",1.43%,
+comp27_c0_seq1,MP04b P-III,"4,687.00",1.00%,
+comp29_c0_seq1,MP04c P-III,"4,092.90",0.87%,
+comp1_c0_seq4,MP05a P-III,"3,119.30",0.67%,
+comp1_c0_seq3,MP05b P-III,"3,074.40",0.66%,
+comp108_c0_seq1,MP06a P-III,828.7,0.18%,
+comp90_c0_seq1,MP06b P-III,"1,130.00",0.24%,
+comp12_c0_seq1,MP07 P-III,"2,233.10",0.48%,
+comp282_c0_seq1,MP08 P-II,144.1,0.03%,
+comp310_c0_seq1,MP09 P-II,25.2,0.01%,
+comp310_c0_seq2,MP10 P-II,70.4,0.02%,
+comp953_c0_seq1,MP11 P-II,81.3,0.02%,
+comp473_c0_seq1,MP12 P-II,117,0.03%,
+comp26_c0_seq8,MP13 P-II,181.7,0.04%,
+comp1_c0_seq5,MP14 P-II,"49,543.30",10.58%,
+comp364_c0_seq1,MP15 P-II,205.1,0.04%,
+comp274_c0_seq1,MP16 P-II,140.1,0.03%,
+comp40_c0_seq1,NGF,"1,970.80",0.42%,0.42%
+comp74_c0_seq1,PDE,170.4,0.04%,0.15%
+comp74_c0_seq3,PDE,191.6,0.04%,
+comp74_c0_seq2,PDE,158,0.03%,
+comp74_c0_seq4,PDE,167.8,0.04%,
+comp0_c0_seq1,PLA2 1,"162,351.80",34.68%,45.50%
+comp7_c0_seq1,PLA2 2,"42,698.90",9.12%,
+comp22_c0_seq1,PLA2 3,"7,819.50",1.67%,
+comp460_c0_seq1,PLA2 4,147.3,0.03%,
+comp86_c0_seq1,PLB,474.6,0.10%,0.10%
+comp9_c0_seq6,SP02,"2,982.20",0.64%,5.03%
+comp9_c0_seq5,SP03,"1,273.50",0.27%,
+comp9_c0_seq9,SP04,"1,207.90",0.26%,
+comp9_c0_seq17,SP05,"1,189.20",0.25%,
+comp9_c0_seq4,SP06,953.1,0.20%,
+comp9_c0_seq12,SP07a,703.1,0.15%,
+comp9_c0_seq8,SP07b,814.2,0.17%,
+comp9_c0_seq3,SP1,"6,779.20",1.45%,
+comp376_c0_seq10,SP10,22.3,0.01%,
+comp9_c0_seq18,SP11,475.9,0.10%,
+comp9_c0_seq25,SP12,572.8,0.12%,
+comp9_c0_seq15,SP13 ,"1,048.20",0.22%,
+comp9_c0_seq14,SP14,"1,520.50",0.33%,
+comp660_c0_seq1,SP15,55.4,0.01%,
+comp9_c0_seq27,SP8a,768.3,0.16%,
+comp9_c0_seq20,SP8b,"1,628.10",0.35%,
+comp95_c0_seq1,SP9a,975,0.21%,
+comp58_c0_seq3,SP9b,601.7,0.13%,
+comp34_c0_seq1,VEGF1,942.3,0.20%,0.21%
+comp298_c3_seq1,VEGF2,24.2,0.01%,
+comp298_c3_seq4,VEGF3,25.4,0.01%,

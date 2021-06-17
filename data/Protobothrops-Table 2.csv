@@ -1,0 +1,195 @@
+Table 2
+ID,Toxin Class,FPKM,% FPKM,Pharmacology,NCBI Link,BLAST hit
+comp72_c0_seq1,3F,737.3,0.157%,Unknown,A5X2W8.1,gi|166229885|sp|A5X2W8.1|TX3_SISCA RecName: Full=Toxin 3; Flags: Precursor >gi|109255016|gb|ABG27006.1| three finger toxin 3 [Sistrurus catenatus edwardsi] >gi|167614289|gb|ABZ89720.1| three finger toxin 3 precursor [Sistrurus catenatus edwardsi]
+comp61_c0_seq1,5‘NTase,553.7,0.118%,Hypotensive; conversion of nucleotides to nucleosides,AEJ31979.1,gi|338855300|gb|AEJ31979.1| ecto-5' nucleotidase [Crotalus adamanteus]
+comp155_c0_seq1,BPP,211.5,0.045%,Hypotensive; potentiation of bradykinin,P0C7P5.1,gi|193806696|sp|P0C7P5.1|BNP_TRIFL RecName: Full=Bradykinin-potentiating and C-type natriuretic peptides; AltName: Full=BPP-CNP; Contains: RecName: Full=Bradykinin-potentiating peptide Tf1; Contains: RecName: Full=Bradykinin-potentiating peptide Tf2; Contains: RecName: Full=Bradykinin-potentiating peptide Tf3; Contains: RecName: Full=C-type natriuretic peptide Tf-CNP; Contains: RecName: Full=C-type natriuretic peptide Tf-CNP(3-22); Contains: RecName: Full=C-type natriuretic peptide Tf-CNP(6-22); Flags: Precursor
+comp10_c0_seq1,CRISP,"12,468.8",2.660%,Hypotensive; Smooth muscle relaxation,Q8JI39.1,gi|48474867|sp|Q8JI39.1|CRVP_TRIFL RecName: Full=Triflin; Flags: Precursor >gi|21305553|gb|AAM45665.1|AF384219_1 triflin [Trimeresurus flavoviridis]
+comp822_c0_seq1,CRISP EGF,30.4,0.006%,-------,AEJ31965.1,gi|338855272|gb|AEJ31965.1| cysteine-rich with EGF-like domain [Crotalus adamanteus]
+comp11_c0_seq6,CTL01,"4,121.0",0.879%,anti-coagulant-like; similar to toxins that bind Factors IX/X,BAB21452.1,gi|12583677|dbj|BAB21452.1| factor XI/factor X binding protein A chain [Trimeresurus flavoviridis]
+comp11_c0_seq4,CTL02,"2,905.5",0.620%,agglutinates platelets without vWF; does not bind Factors IX/X; does not inhibit thrombin,Q5FZI6.1,gi|82125516|sp|Q5FZI6.1|TRIMA_TRIMU RecName: Full=Trimecetin subunit alpha; Flags: Precursor >gi|58293944|gb|AAW69915.1| trimecetin alpha-chain precursor [Protobothrops mucrosquamatus]
+comp11_c0_seq3,CTL03,"2,423.3",0.517%,"anti-coagulant; binds Factor IX, not X",Q7LZ71.1,"gi|82130933|sp|Q7LZ71.1|IXA_TRIFL RecName: Full=Coagulation factor IX-binding protein subunit A; Short=IX-bp A >gi|5821825|pdb|1BJ3|A Chain A, Crystal Structure Of Coagulation Factor Ix-Binding Protein (Ix-Bp) From Venom Of Habu Snake With A Heterodimer O"
+comp32_c0_seq1,CTL04,"2,216.9",0.473%,-------,AEJ31972.1,gi|338855286|gb|AEJ31972.1| C-type lectin 6 [Crotalus adamanteus]
+comp11_c0_seq8,CTL05,"2,051.8",0.438%,anti-coagulant; binds Factors IX/X,P23806.2,gi|2851435|sp|P23806.2|IXXA_TRIFL RecName: Full=Coagulation factor IX/factor X-binding protein subunit A; Short=IX/X-BP; Flags: Precursor >gi|1402640|dbj|BAA11887.1| factor IX/factor X binding protein A chain [Trimeresurus flavoviridis]
+comp11_c0_seq7,CTL06,"1,947.6",0.416%,anti-coagulant-like; similar to toxins that bind Factors IX/X,BAB21452.1,gi|12583677|dbj|BAB21452.1| factor XI/factor X binding protein A chain [Trimeresurus flavoviridis]
+comp32_c0_seq2,CTL07,"1,840.4",0.393%,inhibits platelet aggregation; binds GP1b,Q8AV98.1,gi|82133323|sp|Q8AV98.1|FLOB_TRIFL RecName: Full=Flavocetin-A subunit beta; Short=FL-A subunit beta; Flags: Precursor >gi|25245527|gb|AAN72437.1| flavocetin-A beta chain [Trimeresurus flavoviridis]
+comp11_c0_seq1,CTL08,"1,705.5",0.364%,inhibits platelet aggregation; binds GP1b,Q8AV98.1,gi|82133319|sp|Q8AV97.1|FLOA_TRIFL RecName: Full=Flavocetin-A subunit alpha; Short=FL-A subunit alpha; Flags: Precursor >gi|25245561|gb|AAN72438.1| flavocetin-A alpha chain [Trimeresurus flavoviridis]
+comp50_c0_seq1,CTL09,"1,689.1",0.360%,anti-coagulant; binds Factors IX/X,P23807.2,gi|2851436|sp|P23807.2|IXXB_TRIFL RecName: Full=Coagulation factor IX/factor X-binding protein subunit B; Short=IX/X-BP; Flags: Precursor >gi|1402642|dbj|BAA11888.1| factor IX/factor X binding protein B chain [Trimeresurus flavoviridis]
+comp11_c0_seq5,CTL10,531.0,0.113%,anti-coagulant; binds Factors IX/X,Q7LZ71.1,"gi|82130933|sp|Q7LZ71.1|IXA_TRIFL RecName: Full=Coagulation factor IX-binding protein subunit A; Short=IX-bp A >gi|5821825|pdb|1BJ3|A Chain A, Crystal Structure Of Coagulation Factor Ix-Binding Protein (Ix-Bp) From Venom Of Habu Snake With A Heterodimer O"
+comp11_c0_seq10,CTL11,766.3,0.163%,inhibits platelet aggregation; binds GP1b,Q8AV98.1,gi|82133323|sp|Q8AV98.1|FLOB_TRIFL RecName: Full=Flavocetin-A subunit beta; Short=FL-A subunit beta; Flags: Precursor >gi|25245527|gb|AAN72437.1| flavocetin-A beta chain [Trimeresurus flavoviridis]
+comp11_c0_seq2,CTL12,"1,145.0",0.244%,inhibits platelet aggregation; binds GP1b,Q8AV98.1,gi|82133319|sp|Q8AV97.1|FLOA_TRIFL RecName: Full=Flavocetin-A subunit alpha; Short=FL-A subunit alpha; Flags: Precursor >gi|25245561|gb|AAN72438.1| flavocetin-A alpha chain [Trimeresurus flavoviridis]
+comp1084_c0_seq1,DPP IV,32.5,0.007%,inactivation of hypertensive hormones; hypotensive,BAD06332.1,gi|40363634|dbj|BAD06332.1| dipeptidylpeptidase 4a [Gloydius brevicaudus]
+comp213_c0_seq1,GBL,311.5,0.066%,hemagglutinin,Q9YGP1.1,gi|7674107|sp|Q9YGP1.1|LECG_TRIST RecName: Full=Galactose-binding lectin; Short=TSL; Flags: Precursor >gi|4325094|gb|AAD17252.1| C-type lectin [Viridovipera stejnegeri]
+comp249_c0_seq1,GC1,24.8,0.005%,cyclization of N-terminal glutamine residues,Q90YA8.1,gi|82108661|sp|Q90YA8.1|QPCT_GLOBL RecName: Full=Glutaminyl-peptide cyclotransferase; AltName: Full=Glutaminyl cyclase; Short=QC; AltName: Full=Glutaminyl-tRNA cyclotransferase; Flags: Precursor >gi|15991080|dbj|BAB69586.1| glutaminyl cyclase [Gloydius bl
+comp249_c0_seq2,GC2,25.3,0.005%,cyclization of N-terminal glutamine residues,Q90YA8.1,gi|82108661|sp|Q90YA8.1|QPCT_GLOBL RecName: Full=Glutaminyl-peptide cyclotransferase; AltName: Full=Glutaminyl cyclase; Short=QC; AltName: Full=Glutaminyl-tRNA cyclotransferase; Flags: Precursor >gi|15991080|dbj|BAB69586.1| glutaminyl cyclase [Gloydius bl
+comp249_c0_seq3,GC3,35.4,0.008%,cyclization of N-terminal glutamine residues,Q90YA8.1,gi|82108661|sp|Q90YA8.1|QPCT_GLOBL RecName: Full=Glutaminyl-peptide cyclotransferase; AltName: Full=Glutaminyl cyclase; Short=QC; AltName: Full=Glutaminyl-tRNA cyclotransferase; Flags: Precursor >gi|15991080|dbj|BAB69586.1| glutaminyl cyclase [Gloydius blomhoffi]
+comp249_c0_seq4,GC4,36.4,0.008%,cyclization of N-terminal glutamine residues,Q90YA8.1,gi|82108661|sp|Q90YA8.1|QPCT_GLOBL RecName: Full=Glutaminyl-peptide cyclotransferase; AltName: Full=Glutaminyl cyclase; Short=QC; AltName: Full=Glutaminyl-tRNA cyclotransferase; Flags: Precursor >gi|15991080|dbj|BAB69586.1| glutaminyl cyclase [Gloydius blomhoffi]
+comp271_c0_seq1,HYAL,127.0,0.027%,degrades extracellular matrix,ABI33937.1,gi|113203667|gb|ABI33937.1| hyaluronidase [Echis ocellatus]
+comp3_c0_seq1,LAO,"9,002.9",1.921%,activation of sGC in presence of SD; hypotensive,Q6WP39.1,"gi|82090465|sp|Q6WP39.1|OXLA_TRIST RecName: Full=L-amino-acid oxidase; Short=LAAO; Short=LAO; Short=TSV-LAO; Flags: Precursor >gi|60729671|pir||JC8015 L-amino-acid oxidase (EC 1.4.3.2) precursor, TSV-LAO - Chinese green tree viper >gi|34014953|gb|AAQ56232"
+comp3_c0_seq2,LAO,"15,709.2",3.351%,activation of sGC in presence of SD; hypotensive,Q6WP39.1,"gi|82090465|sp|Q6WP39.1|OXLA_TRIST RecName: Full=L-amino-acid oxidase; Short=LAAO; Short=LAO; Short=TSV-LAO; Flags: Precursor >gi|60729671|pir||JC8015 L-amino-acid oxidase (EC 1.4.3.2) precursor, TSV-LAO - Chinese green tree viper >gi|34014953|gb|AAQ56232"
+comp1_c0_seq2,MP01 P-II,"44,313.9",9.454%,probably hemorrhagic; inhibits platelet aggregation,P18619.2,gi|31077169|sp|P18619.2|DISF_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin flavoridin; Flags: Precursor >gi|21326758|dbj|BAC00515.1| flavoridin precursor [Trimeresuru
+comp6_c0_seq1,MP02 P-II,"34,770.9",7.418%,hemorrhagic; inhibits platelet aggregation,P14530.3,gi|50403719|sp|P14530.3|HR2A_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR2a; AltName: Full=Trimerelysin II; Contains: RecName: Full=Disintegrin flavostatin; AltName: Full=Platelet aggrega
+comp14_c0_seq1,MP03 P-III,"9,377.1",2.001%,probably hemorrhagic; inhibits platelet aggregation,Q8JIR2.1,gi|52000724|sp|Q8JIR2.1|HR1A_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR1a; Contains: RecName: Full=Disintegrin-like 1a; Flags: Precursor >gi|20530119|dbj|BAB92013.1| hemorrhagic metallo
+comp23_c0_seq1,MP04a P-III,"6,685.3",1.426%,activates prothrombin; non-hemorrhagic; weakly inhibits platelet aggregation; hydrolyzes fibrinogen Aα chain,Q90ZI3.1,gi|82217336|sp|Q90ZI3.1|VMHV1_TRIFL RecName: Full=Zinc metalloproteinase-disintegrin HV1; AltName: Full=Vascular apoptosis-inducing protein; Flags: Precursor >gi|14325767|dbj|BAB60682.1| vascular apoptosis-inducing protein [Trimeresurus flavoviridis]
+comp27_c0_seq1,MP04b P-III,"4,687.0",1.000%,activates prothrombin; non-hemorrhagic; weakly inhibits platelet aggregation; hydrolyzes fibrinogen Aα chain,Q90ZI3.1,gi|82217336|sp|Q90ZI3.1|VMHV1_TRIFL RecName: Full=Zinc metalloproteinase-disintegrin HV1; AltName: Full=Vascular apoptosis-inducing protein; Flags: Precursor >gi|14325767|dbj|BAB60682.1| vascular apoptosis-inducing protein [Trimeresurus flavoviridis]
+comp29_c0_seq1,MP04c P-III,"4,092.9",0.873%,activates prothrombin; non-hemorrhagic; weakly inhibits platelet aggregation; hydrolyzes fibrinogen Aα chain,Q90ZI3.1,gi|82217336|sp|Q90ZI3.1|VMHV1_TRIFL RecName: Full=Zinc metalloproteinase-disintegrin HV1; AltName: Full=Vascular apoptosis-inducing protein; Flags: Precursor >gi|14325767|dbj|BAB60682.1| vascular apoptosis-inducing protein [Trimeresurus flavoviridis]
+comp1_c0_seq4,MP05a P-III,"3,119.3",0.665%,probably hemorrhagic; inhibits platelet aggregation,Q8JIR2.1,gi|52000724|sp|Q8JIR2.1|HR1A_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR1a; Contains: RecName: Full=Disintegrin-like 1a; Flags: Precursor >gi|20530119|dbj|BAB92013.1| hemorrhagic metallo
+comp1_c0_seq3,MP05b P-III,"3,074.4",0.656%,probably hemorrhagic; inhibits platelet aggregation,Q8JIR2.1,gi|52000724|sp|Q8JIR2.1|HR1A_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR1a; Contains: RecName: Full=Disintegrin-like 1a; Flags: Precursor >gi|20530119|dbj|BAB92013.1| hemorrhagic metallo
+comp108_c0_seq1,MP06a P-III,828.7,0.177%,-------,BAK64383.1,gi|344925813|dbj|BAK64383.1| flavorase [Trimeresurus flavoviridis]
+comp90_c0_seq1,MP06b P-III,"1,130.0",0.241%,-------,BAK64383.1,gi|344925813|dbj|BAK64383.1| flavorase [Trimeresurus flavoviridis]
+comp12_c0_seq1,MP07 P-III,"2,233.1",0.476%,-------,BAK64383.1,gi|344925813|dbj|BAK64383.1| flavorase [Trimeresurus flavoviridis]
+comp282_c0_seq1,MP08 P-II,144.1,0.031%,-------,ABG26978.1,gi|109254960|gb|ABG26978.1| metalloproteinase isoform 1 [Sistrurus catenatus edwardsi]
+comp310_c0_seq1,MP09 P-II,25.2,0.005%,-------,ABN72547.1,gi|126035683|gb|ABN72547.1| metalloproteinase [Naja atra]
+comp310_c0_seq2,MP10 P-II,70.4,0.015%,-------,ABN72547.1,gi|126035683|gb|ABN72547.1| metalloproteinase [Naja atra]
+comp953_c0_seq1,MP11 P-II,81.3,0.017%,-------,ACI02287.1,gi|205278803|gb|ACI02287.1| batroxstatin-1 [Bothrops atrox]
+comp473_c0_seq1,MP12 P-II,117.0,0.025%,-------,AEJ31986.1,gi|338855314|gb|AEJ31986.1| metalloproteinase 3 [Crotalus adamanteus]
+comp26_c0_seq8,MP13 P-II,181.7,0.039%,-------,CAA62600.1,gi|995748|emb|CAA62600.1| atrolysin e [Protobothrops mucrosquamatus]
+comp1_c0_seq5,MP14 P-II,"49,543.3",10.570%,probably hemorrhagic; inhibits platelet aggregation,P18619.2,gi|31077169|sp|P18619.2|DISF_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin flavoridin; Flags: Precursor >gi|21326758|dbj|BAC00515.1| flavoridin precursor [Trimeresurus flavoviridis]
+comp364_c0_seq1,MP15 P-II,205.1,0.044%,probably hemorrhagic; inhibits platelet aggregation,P18619.2,gi|31077169|sp|P18619.2|DISF_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin flavoridin; Flags: Precursor >gi|21326758|dbj|BAC00515.1| flavoridin precursor [Trimeresurus flavoviridis]
+comp274_c0_seq1,MP16 P-II,140.1,0.030%,probably hemorrhagic; inhibits platelet aggregation,Q90YA6.1,gi|51701443|sp|Q90YA6.1|DIS2_TRIEL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin elegantin-2a; Contains: RecName: Full=Disintegrin elegantin-2b; Contains: RecName: Full=Disintegrin elegantin-2c; Contains: RecName: Full=Disintegrin elegantin-2d; Contains: RecName: Full=Disintegrin elegantin-2e; Contains: RecName: Full=Disintegrin elegantin-2f; Flags: Precursor >gi|15991222|dbj|BAB69658.1| elegantin-2a precursor [Protobothrops elegans]
+comp40_c0_seq1,NGF,"1,970.8",0.420%,histamine release; NO liberation; plasminogen activation,BAG16511.1,gi|171854641|dbj|BAG16511.1| nerve growth factor [Trimeresurus flavoviridis]
+comp74_c0_seq1,PDE,170.4,0.036%,release of nucleotides for conversion to nucleosides; hypotensive,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp74_c0_seq3,PDE,191.6,0.041%,release of nucleotides for conversion to nucleosides; hypotensive,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp74_c0_seq2,PDE,158.0,0.034%,release of nucleotides for conversion to nucleosides; hypotensive,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp74_c0_seq4,PDE,167.8,0.036%,release of nucleotides for conversion to nucleosides; hypotensive,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp0_c0_seq1,PLA2 1,"162,351.8",34.637%,membrane degradation; release of lysolecithin; not neurotoxic,Q90Y77.1,gi|28212211|sp|Q90Y77.1|PA2Y_TRIFL RecName: Full=Phospholipase A2 isozyme PL-Y; AltName: Full=Phosphatidylcholine 2-acylhydrolase; Flags: Precursor >gi|15799261|dbj|BAB68546.1| phosphlipase A2 isoenzyme PL-Y [Trimeresurus flavoviridis]
+comp7_c0_seq1,PLA2 K49,"42,698.9",9.110%,membrane degradation; release of lysolecithin; not neurotoxic,BAA01565.1,gi|436247|dbj|BAA01565.1| phospholipase A2 [Trimeresurus flavoviridis] >gi|15799263|dbj|BAB68547.1| [Asp49] phospholipase A2 okinawa [Trimeresurus flavoviridis] >gi|15799265|dbj|BAB68548.1| [Asp49] phospholipase A2 amami-oshima [Trimeresurus flavoviridis]
+comp22_c0_seq1,PLA2 3,"7,819.5",1.668%,membrane degradation; release of lysolecithin; not neurotoxic,BAC56893.1,gi|28268779|dbj|BAC56893.1| PLA-N(O) [Trimeresurus flavoviridis]
+comp460_c0_seq1,PLA2 4,147.3,0.031%,membrane degradation; release of lysolecithin; not neurotoxic,BAA01562.1,"gi|222955|dbj|BAA01562.1| phospholipase A2 isozyme, basic protein II [Trimeresurus flavoviridis] >gi|725456|dbj|BAA02652.1| phospholipase A2 [Trimeresurus flavoviridis] >gi|211926919|dbj|BAG82668.1| phospholipase A2 [Trimeresurus flavoviridis]"
+comp86_c0_seq1,PLB,474.6,0.101%,membrane degradation; release of FA,AEJ31983.1,gi|338855308|gb|AEJ31983.1| phospholipase B [Crotalus adamanteus]
+comp9_c0_seq6,SP02,"2,982.2",0.636%,possibly non-catalytic,AEJ31997.1,gi|338855336|gb|AEJ31997.1| serine proteinase 3 [Crotalus adamanteus]
+comp9_c0_seq5,SP03,"1,273.5",0.272%,TLE-like,Q9DG84.1,gi|13959642|sp|Q9DG84.1|VSP7_TRIMU RecName: Full=Serpentokallikrein-2; Flags: Precursor >gi|11036673|gb|AAG27253.1|AF098262_1 serpentokallikrein-2 [Protobothrops mucrosquamatus]
+comp9_c0_seq9,SP04,"1,207.9",0.258%,TLE-like,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp9_c0_seq17,SP05,"1,189.2",0.254%,TLE-like,ABG26971.1,gi|109254946|gb|ABG26971.1| serine proteinase isoform 5 [Sistrurus catenatus edwardsi]
+comp9_c0_seq4,SP06,953.1,0.203%,colts fibrinogen; cleaves β-chain preferentially; ,Q91510.1,gi|13959634|sp|Q91510.1|VSP4_TRIMU RecName: Full=Mucrofibrase-4; Flags: Precursor >gi|602602|emb|CAA58224.1| mucofirase 4 [Protobothrops mucrosquamatus]
+comp9_c0_seq12,SP07a,703.1,0.150%,TLE-like,O13061.1,gi|13959619|sp|O13061.1|VSPB_TRIGA RecName: Full=Venom serine proteinase 2B; Flags: Precursor >gi|2114124|dbj|BAA19981.1| serine protease [Trimeresurus gramineus]
+comp9_c0_seq8,SP07b,814.2,0.174%,TLE-like,O13061.1,gi|13959619|sp|O13061.1|VSPB_TRIGA RecName: Full=Venom serine proteinase 2B; Flags: Precursor >gi|2114124|dbj|BAA19981.1| serine protease [Trimeresurus gramineus]
+comp9_c0_seq3,SP1,"6,779.2",1.446%,clots fibrinogen,P05620.2,gi|3915685|sp|P05620.2|VSP1_TRIFL RecName: Full=Thrombin-like enzyme flavoxobin; AltName: Full=Venom serine proteinase 1; Flags: Precursor >gi|2114114|dbj|BAA19976.1| serine protease [Trimeresurus flavoviridis]
+comp376_c0_seq10,SP10,22.3,0.005%,Plasminogen Activator Precursor,AAD01624.1,gi|4102926|gb|AAD01624.1| plasminogen activator precursor [Gloydius brevicaudus]
+comp9_c0_seq18,SP11,475.9,0.102%,-------,ABG26973.1,gi|109254950|gb|ABG26973.1| serine proteinase isoform 7 [Sistrurus catenatus edwardsi]
+comp9_c0_seq25,SP12,572.8,0.122%,TLE-like,O13057.1,gi|13959615|sp|O13057.1|VSP2_TRIFL RecName: Full=Venom serine proteinase 2; Flags: Precursor >gi|2114116|dbj|BAA19977.1| serine protease [Trimeresurus flavoviridis]
+comp9_c0_seq15,SP13 ,"1,048.2",0.224%,TLE-like,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp9_c0_seq14,SP14,"1,520.5",0.324%,"Clots rabbit fibrinogen, but not human or bovine; releases FPA from rabbit",P84788.1,gi|90116798|sp|P84788.1|VSP1_TRIEL RecName: Full=Thrombin-like enzyme elegaxobin-1; AltName: Full=Elegaxobin I
+comp660_c0_seq1,SP15,55.4,0.012%,TLE-like,Q71QI3.1,gi|82239733|sp|Q71QI3.1|VSP5_TRIST RecName: Full=Venom serine protease CL5; Flags: Precursor >gi|33307080|gb|AAQ02904.1| serine protease CL5 precursor [Viridovipera stejnegeri]
+comp9_c0_seq27,SP8a,768.3,0.164%,TLE-like,Q71QI0.1,gi|82239730|sp|Q71QI0.1|VSP07_TRIST RecName: Full=Venom serine protease KN7 homolog; Flags: Precursor >gi|33307089|gb|AAQ02907.1| serine protease KN7 precursor [Viridovipera stejnegeri]
+comp9_c0_seq20,SP8b,"1,628.1",0.347%,TLE-like,Q71QI0.1,gi|82239730|sp|Q71QI0.1|VSP07_TRIST RecName: Full=Venom serine protease KN7 homolog; Flags: Precursor >gi|33307089|gb|AAQ02907.1| serine protease KN7 precursor [Viridovipera stejnegeri]
+comp95_c0_seq1,SP9a,975.0,0.208%,TLE-like,Q9DF67.1,gi|13959639|sp|Q9DF67.1|VSP2_TRIJE RecName: Full=Venom serine proteinase 2; Short=SP2; Flags: Precursor >gi|9988781|gb|AAG10789.1| serine proteinase 2 precursor [Protobothrops jerdonii]
+comp58_c0_seq3,SP9b,601.7,0.128%,TLE-like,Q9DF67.1,gi|13959639|sp|Q9DF67.1|VSP2_TRIJE RecName: Full=Venom serine proteinase 2; Short=SP2; Flags: Precursor >gi|9988781|gb|AAG10789.1| serine proteinase 2 precursor [Protobothrops jerdonii]
+comp34_c0_seq1,VEGF1,942.3,0.201%,Hypotensive; Increases vascular permeability,P67862.1,gi|54036443|sp|P67862.1|TXVE_TRIFL RecName: Full=Snake venom vascular endothelial growth factor toxin; Short=svVEGF; AltName: Full=Vascular endothelial growth factor F; Flags: Precursor >gi|51555818|dbj|BAD38844.1| snake venom vascular endothelial growth 
+comp298_c3_seq1,VEGF2,24.2,0.005%,Hypotensive; Increases vascular permeability,BAD38845.1,gi|51555820|dbj|BAD38845.1| vascular endothelial growth factor 166 isoform precursor [Trimeresurus flavoviridis]
+comp298_c3_seq4,VEGF3,25.4,0.005%,Hypotensive; Increases vascular permeability,BAD38846.1,gi|51555822|dbj|BAD38846.1| vascular endothelial growth factor 122 isoform precursor [Trimeresurus flavoviridis]
+comp10052_c0_seq1,,2.8,,8,,NA
+comp1040_c0_seq1,,14.2,,22,,gi|327277932|ref|XP_003223717.1| PREDICTED: xin actin-binding repeat-containing protein 2-like [Anolis carolinensis]
+comp1071_c0_seq1,,10.5,,4,,NA
+comp10890_c0_seq1,,3.6,,6,,NA
+comp11030_c0_seq1,,3.3,,5,,NA
+comp1122_c0_seq2,,12.3,,18,,gi|327259893|ref|XP_003214770.1| PREDICTED: eukaryotic translation initiation factor 4 gamma 2-like [Anolis carolinensis]
+comp12069_c0_seq1,,3,,6,,NA
+comp12481_c0_seq1,,2.6,,15,,NA
+comp13159_c0_seq1,,4.2,,12,,NA
+comp13259_c0_seq1,,2.9,,7,,NA
+comp14196_c0_seq1,,2.4,,7,,NA
+comp15713_c0_seq1,,2.8,,5,,NA
+comp15914_c0_seq1,,3.6,,4,,NA
+comp16205_c0_seq1,,4,,12,,NA
+comp1656_c0_seq1,,18.3,,11,,NA
+comp17307_c0_seq1,,3.4,,10,,NA
+comp1776_c0_seq1,,15.3,,6,,NA
+comp1788_c0_seq1,,18.7,,17,,gi|327271758|ref|XP_003220654.1| PREDICTED: serine incorporator 3-like [Anolis carolinensis]
+comp2006_c0_seq12,,0.2,,15,,"gi|327273538|ref|XP_003221537.1| PREDICTED: inositol 1,4,5-trisphosphate receptor type 2-like [Anolis carolinensis]"
+comp20144_c0_seq1,,2.2,,5,,NA
+comp20355_c0_seq1,,2.6,,7,,NA
+comp2038_c0_seq1,,5,,21,,NA
+comp2040_c0_seq1,,13.8,,8,,NA
+comp21382_c0_seq1,,2.7,,6,,NA
+comp2154_c1_seq1,,3.6,,22,,NA
+comp21810_c0_seq1,,1.5,,12,,NA
+comp22054_c0_seq1,,2.6,,5,,NA
+comp22401_c0_seq1,,1.9,,10,,NA
+comp232_c0_seq2,,3.4,,51,,gi|327269350|ref|XP_003219457.1| PREDICTED: fer-1-like protein 6-like [Anolis carolinensis]
+comp232_c0_seq3,,0.2,,43,,gi|327269350|ref|XP_003219457.1| PREDICTED: fer-1-like protein 6-like [Anolis carolinensis]
+comp2355_c0_seq1,,3.1,,10,,NA
+comp24352_c0_seq1,,1.7,,8,,NA
+comp2456_c0_seq1,,4.1,,5,,NA
+comp24840_c0_seq1,,2.1,,4,,gi|327262765|ref|XP_003216194.1| PREDICTED: casein kinase II subunit alpha-like [Anolis carolinensis]
+comp2525_c0_seq1,,16.4,,8,,NA
+comp25539_c0_seq2,,1,,12,,NA
+comp25558_c0_seq1,,1.8,,7,,NA
+comp25989_c0_seq1,,2.2,,6,,NA
+comp2691_c0_seq1,,7.8,,6,,NA
+comp26944_c0_seq1,,2.2,,5,,NA
+comp27288_c0_seq1,,2.3,,5,,NA
+comp2766_c0_seq1,,4.3,,10,,NA
+comp27860_c0_seq1,,2.2,,13,,NA
+comp27872_c0_seq1,,2.1,,6,,NA
+comp2791_c0_seq1,,3.7,,10,,NA
+comp2806_c0_seq1,,9.1,,5,,NA
+comp2867_c0_seq1,,3.2,,7,,NA
+comp28832_c0_seq1,,2.2,,6,,gi|56605930|ref|NP_001008468.1| transmembrane protein 184C [Gallus gallus] >gi|82083056|sp|Q5ZMP3.1|T184C_CHICK RecName: Full=Transmembrane protein 184C; AltName: Full=Transmembrane protein 34 >gi|53126977|emb|CAG31000.1| hypothetical protein RCJMB04_1i7 
+comp28881_c0_seq1,,1.8,,16,,NA
+comp30081_c0_seq1,,2.7,,8,,NA
+comp33271_c0_seq1,,2.2,,9,,NA
+comp3361_c0_seq1,,4.4,,4,,NA
+comp3369_c0_seq3,,2.8,,8,,NA
+comp3479_c0_seq1,,7.8,,4,,"gi|327265130|ref|XP_003217361.1| PREDICTED: beta-1,3-N-acetylglucosaminyltransferase radical fringe-like [Anolis carolinensis]"
+comp34946_c0_seq1,,2.2,,8,,NA
+comp34989_c0_seq1,,2,,12,,NA
+comp3547_c0_seq1,,5.8,,7,,gi|327259989|ref|XP_003214818.1| PREDICTED: chitinase domain-containing protein 1-like [Anolis carolinensis]
+comp35836_c0_seq1,,1.7,,8,,NA
+comp3614_c0_seq1,,6.9,,12,,NA
+comp3653_c0_seq1,,6.2,,12,,gi|118083569|ref|XP_416600.2| PREDICTED: hypothetical protein [Gallus gallus]
+comp36841_c0_seq1,,3,,10,,gi|338855288|gb|AEJ31973.1| C-type lectin 7 [Crotalus adamanteus]
+comp3780_c0_seq1,,3.4,,11,,NA
+comp39694_c0_seq1,,2.1,,4,,NA
+comp40274_c0_seq1,,1.9,,12,,NA
+comp40921_c0_seq1,,1.6,,4,,NA
+comp42116_c0_seq1,,1.7,,5,,NA
+comp43721_c0_seq1,,1.5,,18,,NA
+comp4384_c0_seq1,,4.7,,11,,NA
+comp445_c0_seq1,,17.4,,5,,NA
+comp44584_c0_seq1,,2,,4,,NA
+comp44987_c0_seq1,,1.4,,5,,NA
+comp4502_c0_seq1,,5,,14,,NA
+comp46369_c0_seq1,,1.7,,9,,NA
+comp4672_c0_seq1,,7,,11,,NA
+comp47283_c0_seq1,,1.7,,6,,NA
+comp4799_c0_seq1,,3.1,,8,,NA
+comp5007_c0_seq1,,5.4,,5,,NA
+comp507_c0_seq1,,2.7,,5,,NA
+comp5100_c0_seq1,,5.5,,4,,NA
+comp5293_c0_seq1,,4.9,,4,,"gi|149031434|gb|EDL86424.1| similar to Lmbr1 protein (predicted), isoform CRA_a [Rattus norvegicus]"
+comp53152_c0_seq1,,1.6,,4,,NA
+comp53500_c0_seq1,,1.5,,6,,NA
+comp5386_c0_seq1,,2.3,,19,,gi|118085244|ref|XP_424045.2| PREDICTED: hypothetical protein [Gallus gallus]
+comp554_c0_seq1,,14.2,,7,,NA
+comp5697_c0_seq2,,2.2,,18,,gi|327275566|ref|XP_003222544.1| PREDICTED: interferon-induced 35 kDa protein-like [Anolis carolinensis]
+comp5982_c0_seq1,,5.7,,5,,NA
+comp6150_c0_seq1,,2,,13,,NA
+comp6247_c0_seq1,,4.7,,9,,NA
+comp6432_c0_seq1,,2.8,,5,,NA
+comp67_c0_seq1,,20,,5,,NA
+comp698_c0_seq1,,16.4,,10,,NA
+comp7082_c0_seq1,,3.2,,8,,NA
+comp7108_c0_seq1,,4.2,,6,,NA
+comp7186_c0_seq1,,4.6,,7,,gi|327279482|ref|XP_003224485.1| PREDICTED: probable helicase with zinc finger domain-like [Anolis carolinensis]
+comp7273_c0_seq1,,4.1,,4,,NA
+comp7414_c0_seq1,,3.8,,5,,NA
+comp7546_c0_seq1,,2.9,,23,,gi|327267720|ref|XP_003218647.1| PREDICTED: disintegrin and metalloproteinase domain-containing protein 9-like [Anolis carolinensis]
+comp7546_c0_seq2,,2.3,,16,,gi|327267720|ref|XP_003218647.1| PREDICTED: disintegrin and metalloproteinase domain-containing protein 9-like [Anolis carolinensis]
+comp7860_c0_seq1,,5.1,,4,,NA
+comp7915_c0_seq1,,5.5,,12,,NA
+comp8012_c1_seq1,,2.5,,4,,NA
+comp8095_c0_seq1,,3.3,,10,,gi|327262355|ref|XP_003215990.1| PREDICTED: DNA polymerase eta-like [Anolis carolinensis]
+comp8211_c0_seq1,,2.3,,7,,NA
+comp8332_c0_seq1,,3.5,,10,,gi|327281071|ref|XP_003225273.1| PREDICTED: hypothetical protein LOC100561709 [Anolis carolinensis]
+comp8368_c0_seq1,,4.2,,22,,NA
+comp8453_c0_seq1,,2.9,,11,,gi|327275353|ref|XP_003222438.1| PREDICTED: transmembrane protease serine 11E-like [Anolis carolinensis]
+comp8662_c0_seq1,,2.1,,5,,NA
+comp8677_c0_seq1,,3.5,,5,,NA
+comp8814_c0_seq1,,3.5,,7,,NA
+comp8937_c0_seq1,,2.5,,8,,NA
+comp894_c0_seq2,,15.9,,4,,NA
+comp9124_c0_seq1,,3.4,,5,,NA
+comp9282_c0_seq1,,3.3,,10,,NA
+comp9355_c0_seq1,,1.9,,4,,NA
+comp9728_c0_seq1,,3,,5,,gi|327262224|ref|XP_003215925.1| PREDICTED: LOW QUALITY PROTEIN: programmed cell death protein 2-like [Anolis carolinensis]
+comp987_c0_seq1,,14.2,,6,,NA

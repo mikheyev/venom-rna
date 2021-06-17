@@ -1,0 +1,178 @@
+Table 1
+ID,Toxin Class,FPKM,% FPKM,peptides,Transcript Length,Peptide Coverage,Peptide Coverage %,NCBI Link,BLAST hit
+comp252_c0_seq1,5‘NTase,65.7,0.017%,,,,,BAG82602.1,gi|211926756|dbj|BAG82602.1| ecto-5'-nucleotidase [Gloydius brevicaudus]
+comp766_c0_seq1,APA,24.6,0.006%,,,,,BAF63164.1,gi|148367284|dbj|BAF63164.1| aminopeptidase A [Gloydius brevicaudus]
+comp6_c0_seq1,BPP/CNP,5852.9,1.541%,,,,,Q90Y12.1,gi|82217207|sp|Q90Y12.1|BNP_CRODU RecName: Full=Bradykinin potentiating and C-type natriuretic peptides; AltName: Full=BPP-CNP; Contains: RecName: Full=Bradykinin-potentiating peptide Cdt1a; Contains: RecName: Full=Bradykinin-potentiating peptide Cdt1b; Contains: RecName: Full=Bradykinin-potentiating peptide Cdt2; Contains: RecName: Full=Bradykinin inhibitor peptide Cdt3; Contains: RecName: Full=C-type natriuretic peptide; Short=CNP; Flags: Precursor >gi|15824634|gb|AAL09426.1|AF308593_1 bradykinin potentiating peptide and C-type natriuretic peptide precursor isoform 1 [Crotalus durissus terrificus]
+comp23_c0_seq1,CRISP,2416.6,0.636%,211,265,165,62.3%,ACE73559.1,gi|190195305|gb|ACE73559.1| cysteine-rich seceretory protein Bs-CRP [Bothriechis schlegelii]
+comp24_c0_seq2,CTLB1,1246.8,0.328%,248,209,156,74.6%,Q719L9.1,gi|82129809|sp|Q719L9.1|CRC1_CRODU RecName: Full=Crotocetin-1; Short=CRC1; Flags: Precursor >gi|33332305|gb|AAQ11364.1| crotocetin-1 [Crotalus durissus terrificus]
+comp24_c0_seq3,CTLB2,405.6,0.107%,17,73,39,53.4%,AEJ31973.1,gi|338855288|gb|AEJ31973.1| C-type lectin 7 [Crotalus adamanteus]
+comp24_c0_seq9,CTLB3,125.6,0.033%,4,69,13,18.8%,Q71RP8.1,gi|82129977|sp|Q71RP8.1|STAB3_TRIST RecName: Full=Stejaggregin-A subunit beta-3; Flags: Precursor >gi|33341216|gb|AAQ15169.1|AF354927_1 stejaggregin-A beta chain-3 [Viridovipera stejnegeri]
+comp24_c0_seq6,CTLB4,117.2,0.031%,4,89,29,32.6%,Q5FZI5.1,gi|82125513|sp|Q5FZI5.1|TRIMB_TRIMU RecName: Full=Trimecetin subunit beta; Flags: Precursor >gi|58293946|gb|AAW69916.1| trimecetin beta-chain precursor [Protobothrops mucrosquamatus]
+comp24_c0_seq7,CTLB5,110.5,0.029%,10,87,47,54.0%,Q71RP8.1,gi|82129977|sp|Q71RP8.1|STAB3_TRIST RecName: Full=Stejaggregin-A subunit beta-3; Flags: Precursor >gi|33341216|gb|AAQ15169.1|AF354927_1 stejaggregin-A beta chain-3 [Viridovipera stejnegeri]
+comp24_c0_seq8,CTLB6,78.4,0.021%,14,86,48,55.8%,Q71RP8.1,gi|82129977|sp|Q71RP8.1|STAB3_TRIST RecName: Full=Stejaggregin-A subunit beta-3; Flags: Precursor >gi|33341216|gb|AAQ15169.1|AF354927_1 stejaggregin-A beta chain-3 [Viridovipera stejnegeri]
+comp24_c0_seq4,CTLB7,246.2,0.065%,,,,,AEJ31975.1,gi|338855292|gb|AEJ31975.1| C-type lectin 9 [Crotalus adamanteus]
+comp24_c0_seq5,CTLB8,363.3,0.096%,,,,,Q71RP8.1,gi|82129977|sp|Q71RP8.1|STAB3_TRIST RecName: Full=Stejaggregin-A subunit beta-3; Flags: Precursor >gi|33341216|gb|AAQ15169.1|AF354927_1 stejaggregin-A beta chain-3 [Viridovipera stejnegeri]
+comp305_c0_seq1,DPP IV,60.6,0.016%,,,,,BAD06332.1,gi|40363634|dbj|BAD06332.1| dipeptidylpeptidase 4a [Gloydius brevicaudus]
+comp24_c0_seq1,GBL,1310.7,0.345%,154,209,135,64.6%,Q9PSM4.1,"gi|34922643|sp|Q9PSM4.1|LECG_LACST RecName: Full=Galactose-specific lectin; AltName: Full=Mutina >gi|1881829|gb|AAB49518.1| lectin-like protein [Lachesis muta, stenophyrs, venom, Peptide, 135 aa]"
+comp157_c0_seq1,HYAL,53.7,0.014%,,,,,ABI33937.1,gi|113203667|gb|ABI33937.1| hyaluronidase [Echis ocellatus]
+comp157_c0_seq2,HYAL,60.7,0.016%,,,,,ABI33937.1,gi|113203667|gb|ABI33937.1| hyaluronidase [Echis ocellatus]
+comp11_c0_seq1,LAO,7848.2,2.066%,572,538,355,71.3%,Q90W54.1,gi|75570145|sp|Q90W54.1|OXLA_AGKHA RecName: Full=L-amino-acid oxidase; Short=LAAO; Short=LAO; Short=M-LAO; Flags: Precursor >gi|15887054|dbj|BAB69450.1| M-LAO [Gloydius blomhoffi]
+comp0_c1_seq2,MP01 P-II,89261.9,23.499%,965,420,265,63.1%,CAA62600.1,gi|995748|emb|CAA62600.1| atrolysin e [Protobothrops mucrosquamatus]
+comp0_c1_seq1,MP02 P-III,26113.6,6.875%,608,642,302,51.1%,Q90ZI3.1,gi|82217336|sp|Q90ZI3.1|VMHV1_TRIFL RecName: Full=Zinc metalloproteinase-disintegrin HV1; AltName: Full=Vascular apoptosis-inducing protein; Flags: Precursor >gi|14325767|dbj|BAB60682.1| vascular apoptosis-inducing protein [Trimeresurus flavoviridis]
+comp0_c1_seq3,MP03 P-III,22417.9,5.902%,9,321,20,6.2%,P20164.4,gi|52001475|sp|P20164.4|HR1B_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR1b; AltName: Full=Trimerelysin I; AltName: Full=Trimerelysin-1; Contains: RecName: Full=Disintegrin-like 1b; Flags
+comp17_c0_seq1,MP04 P-II,6854.9,1.805%,32,98,16,16.3%,ADV71356.1,gi|319759242|gb|ADV71356.1| metalloproteinase PMMP-2 [Protobothrops mucrosquamatus]
+comp15_c0_seq1,MP05 P-III,6826.3,1.797%,49,141,106,75.2%,AEJ31991.1,gi|338855324|gb|AEJ31991.1| metalloproteinase 8 [Crotalus adamanteus]
+comp8_c1_seq1,MP06 P-II,4980.8,1.311%,10,142,35,24.6%,P83912.1,"gi|48427991|sp|P83912.1|VMJEI_TRIJE RecName: Full=Zinc metalloproteinase-disintegrin jerdonitin; Flags: Precursor >gi|60729675|pir||JC8020 metalloproteinase-disintegrin protein, Jerdonitin - Trimeresurus jerdonii >gi|34329647|gb|AAQ63966.1| jerdonitin [Pr"
+comp8_c1_seq3,MP07 P-II,1453.5,0.383%,5,109,36,33.0%,P83912.1,"gi|48427991|sp|P83912.1|VMJEI_TRIJE RecName: Full=Zinc metalloproteinase-disintegrin jerdonitin; Flags: Precursor >gi|60729675|pir||JC8020 metalloproteinase-disintegrin protein, Jerdonitin - Trimeresurus jerdonii >gi|34329647|gb|AAQ63966.1| jerdonitin [Pr"
+comp367_c0_seq1,MP08 P-II,112.0,0.029%,,,,,P18619.2,gi|31077169|sp|P18619.2|DISF_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin flavoridin; Flags: Precursor >gi|21326758|dbj|BAC00515.1| flavoridin precursor [Trimeresurus flavoviridis]
+comp22_c0_seq1,MP09 P-II,108.2,0.028%,,,,,P18619.2,gi|31077169|sp|P18619.2|DISF_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin flavoridin; Flags: Precursor >gi|21326758|dbj|BAC00515.1| flavoridin precursor [Trimeresurus flavoviridis]
+comp383_c0_seq1,MP10 P-II,86.2,0.023%,,,,,P0C6E4.1,gi|182705250|sp|P0C6E4.1|VMJER_TRIJE RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Metalloproteinase; Contains: RecName: Full=Disintegrin jerdonatin; Flags: Precursor
+comp383_c0_seq2,MP11 P-II,33.9,0.009%,,,,,P14530.3,gi|50403719|sp|P14530.3|HR2A_TRIFL RecName: Full=Zinc metalloproteinase/disintegrin; Contains: RecName: Full=Hemorrhagic metalloproteinase HR2a; AltName: Full=Trimerelysin II; Contains: RecName: Full=Disintegrin flavostatin; AltName: Full=Platelet aggregation activation inhibitor; Flags: Precursor >gi|14595995|gb|AAK68850.1| hemorrhagic metalloprotease HR2a and disintegrin flavostatin precursor [Trimeresurus flavoviridis]
+comp8_c1_seq2,MP12 P-II,23.6,0.006%,,,,,P83912.1,"gi|48427991|sp|P83912.1|VMJEI_TRIJE RecName: Full=Zinc metalloproteinase-disintegrin jerdonitin; Flags: Precursor >gi|60729675|pir||JC8020 metalloproteinase-disintegrin protein, Jerdonitin - Trimeresurus jerdonii >gi|34329647|gb|AAQ63966.1| jerdonitin [Protobothrops jerdonii]"
+comp14_c0_seq1,NGF,4969.0,1.308%,5,300,39,16.2%,BAG16511.1,gi|171854641|dbj|BAG16511.1| nerve growth factor [Trimeresurus flavoviridis]
+comp25_c0_seq1,PDE,97.6,0.026%,,,,,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp25_c0_seq2,PDE,88.9,0.023%,,,,,AEJ31980.1,gi|338855302|gb|AEJ31980.1| phosphodiesterase 1 [Crotalus adamanteus]
+comp13_c0_seq1,PLA2-1,5904.5,1.554%,231,151,81,65.9%,P00625.2,gi|26007012|sp|P00625.2|PA21B_TRIOK RecName: Full=Phospholipase A2 PLA2-01; AltName: Full=Phosphatidylcholine 2-acylhydrolase; AltName: Full=Phospholipase A2 isozyme DE-I; Flags: Precursor >gi|1469805|dbj|BAA08383.1| phospholipase A2 [Ovophis okinavensis]
+comp149_c0_seq1,PLA2-2,180.0,0.047%,,,,,Q90Y77.1,gi|28212211|sp|Q90Y77.1|PA2Y_TRIFL RecName: Full=Phospholipase A2 isozyme PL-Y; AltName: Full=Phosphatidylcholine 2-acylhydrolase; Flags: Precursor >gi|15799261|dbj|BAB68546.1| phosphlipase A2 isoenzyme PL-Y [Trimeresurus flavoviridis]
+comp28_c0_seq1,PLB,1412.2,0.372%,381,569,360,65.1%,AEJ31983.1,gi|338855308|gb|AEJ31983.1| phospholipase B [Crotalus adamanteus]
+comp28_c0_seq2,PLB,373.0,0.098%,,,,,AEJ31983.1,gi|338855308|gb|AEJ31983.1| phospholipase B [Crotalus adamanteus]
+comp0_c1_seq48,SP01,18483.3,4.866%,106,65,65,100.0%,Q9DF68.1,gi|13959640|sp|Q9DF68.1|VSP1_TRIJE RecName: Full=Venom serine proteinase-like protein; AltName: Full=SP1; Flags: Precursor >gi|9988779|gb|AAG10788.1| serine proteinase 1 precursor [Protobothrops jerdonii]
+comp0_c1_seq15,SP02,15739.9,4.144%,206,100,57,57.0%,ABS12074.1,gi|151499825|gb|ABS12074.1| thrombin-like serine protease 1 [Cryptelytrops albolabris]
+comp0_c1_seq17,SP03,14844.2,3.908%,171,97,57,58.8%,Q8AY81.1,sp|Q8AY81.1|VSPST_TRIST  RecName: Full=Thrombin-like enzyme stejnobin; Flags: Precursor  stejnobin [Viridovipera stejnegeri]
+comp0_c1_seq37,SP04,14555.2,3.832%,64,77,37,48.1%,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp0_c1_seq40,SP05,13887.9,3.656%,48,48,23,47.9%,Q8AY81.1,gi|82242794|sp|Q8AY81.1|VSPST_TRIST RecName: Full=Thrombin-like enzyme stejnobin; Flags: Precursor >gi|24266793|gb|AAN52347.1| stejnobin [Viridovipera stejnegeri]
+comp0_c1_seq35,SP06,7433.1,1.957%,46,77,61,79.2%,Q8AY81.1,gi|82242794|sp|Q8AY81.1|VSPST_TRIST RecName: Full=Thrombin-like enzyme stejnobin; Flags: Precursor >gi|24266793|gb|AAN52347.1| stejnobin [Viridovipera stejnegeri]
+comp0_c1_seq22,SP07,6898.2,1.816%,127,91,53,58.2%,O13060.1,gi|13959618|sp|O13060.1|VSPA_TRIGA RecName: Full=Venom serine proteinase 2A; Flags: Precursor >gi|2114122|dbj|BAA19980.1| serine protease [Trimeresurus gramineus]
+comp0_c1_seq44,SP08,6140.5,1.617%,44,74,37,50.0%,Q8AY80.1,gi|82242793|sp|Q8AY80.1|VSPS1_TRIST RecName: Full=Thrombin-like enzyme stejnefibrase-1; Flags: Precursor >gi|24266796|gb|AAN52348.1| stejnefibrase 1 [Viridovipera stejnegeri]
+comp0_c1_seq18,SP09,2033.1,0.535%,71,96,85,88.5%,ADP88561.1,gi|311223826|gb|ADP88561.1| plasminogen activator-like protein precursor [Agkistrodon piscivorus leucostoma]
+comp0_c1_seq45,SP09,5536.8,1.458%,71,74,,0.0%,ADP88561.1,gi|311223826|gb|ADP88561.1| plasminogen activator-like protein precursor [Agkistrodon piscivorus leucostoma]
+comp0_c1_seq41,SP10,5086.2,1.339%,94,75,27,36.0%,Q91508.1,gi|13959632|sp|Q91508.1|VSP2_TRIMU RecName: Full=Mucrofibrase-2; AltName: Full=Trimubin; Flags: Precursor >gi|602598|emb|CAA58222.1| mucofirase 2 [Protobothrops mucrosquamatus]
+comp0_c1_seq14,SP11,3648.3,0.960%,7,102,15,14.7%,ABG26977.1,gi|109254958|gb|ABG26977.1| serine proteinase isoform 11 [Sistrurus catenatus edwardsi]
+comp0_c1_seq9,SP12,3608.1,0.950%,15,122,25,20.5%,O13069.1,gi|13959622|sp|O13069.1|VSP2_BOTJA RecName: Full=Kinin-releasing and fibrinogen-clotting serine proteinase 2; AltName: Full=KN-BJ 2; Flags: Precursor >gi|2130946|dbj|BAA20283.1| KN-BJ2 [Bothrops jararaca]
+comp0_c1_seq52,SP13,3479.3,0.916%,30,70,35,50.0%,AAC61838.1,gi|3668352|gb|AAC61838.1| salmobin [Gloydius halys]
+comp0_c1_seq16,SP14,2899.8,0.763%,94,97,39,40.2%,O13063.1,gi|13959621|sp|O13063.1|VSP3_TRIGA RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114128|dbj|BAA19983.1| serine protease [Trimeresurus gramineus]
+comp0_c1_seq23,SP15,1920.8,0.506%,79,90,54,60.0%,O13060.1,gi|13959618|sp|O13060.1|VSPA_TRIGA RecName: Full=Venom serine proteinase 2A; Flags: Precursor >gi|2114122|dbj|BAA19980.1| serine protease [Trimeresurus gramineus]
+comp0_c1_seq43,SP16,1397.7,0.368%,23,74,44,59.5%,Q71QH6.1,gi|82239726|sp|Q71QH6.1|VSP13_TRIST RecName: Full=Venom serine protease KN13; Flags: Precursor >gi|33307101|gb|AAQ02911.1| serine protease KN13 precursor [Viridovipera stejnegeri]
+comp0_c1_seq31,SP17,1153.8,0.304%,20,82,19,23.2%,Q072L6.1,gi|123883733|sp|Q072L6.1|VSPL_BOTAS RecName: Full=Venom serine proteinase-like; Flags: Precursor >gi|82466483|gb|ABB76280.1| thrombin-like enzyme [Bothrops asper]
+comp0_c1_seq53,SP18,1081.9,0.285%,70,69,69,100.0%,Q71QI3.1,gi|82239733|sp|Q71QI3.1|VSP5_TRIST RecName: Full=Venom serine protease CL5; Flags: Precursor >gi|33307080|gb|AAQ02904.1| serine protease CL5 precursor [Viridovipera stejnegeri]
+comp0_c1_seq51,SP19,434.8,0.114%,117,71,39,54.9%,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp0_c1_seq10,SP20,15140.8,3.986%,,,,,Q71QI5.1,gi|82239735|sp|Q71QI5.1|VSP03_TRIST RecName: Full=Venom serine protease KN3; Flags: Precursor >gi|33307074|gb|AAQ02902.1| serine protease KN3 precursor [Viridovipera stejnegeri]
+comp0_c1_seq26,SP21,16365.9,4.308%,,,,,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp0_c1_seq12,SP22,8312.9,2.188%,,,,,O13058.1,gi|13959616|sp|O13058.1|VSP3_TRIFL RecName: Full=Venom serine proteinase 3; Flags: Precursor >gi|2114118|dbj|BAA19978.1| serine protease [Trimeresurus flavoviridis]
+comp0_c1_seq27,SP23,10579.3,2.785%,,,,,ABS12074.1,gi|151499825|gb|ABS12074.1| thrombin-like serine protease 1 [Cryptelytrops albolabris]
+comp0_c1_seq29,SP24,4967.5,1.308%,,,,,Q71QI1.1,gi|82239731|sp|Q71QI1.1|VSP12_TRIST RecName: Full=Venom serine protease KN12; Flags: Precursor >gi|33307086|gb|AAQ02906.1| serine protease KN12 precursor [Viridovipera stejnegeri]
+comp0_c1_seq54,SP25,1774.5,0.467%,,,,,AEJ32003.1,gi|338855348|gb|AEJ32003.1| serine proteinase 9 [Crotalus adamanteus]
+comp74_c0_seq1,VEGF1,46.8,0.012%,,,,,P67860.1,gi|54036551|sp|P67860.1|VEGFA_TRIFL RecName: Full=Vascular endothelial growth factor A; Short=VEGF-A; AltName: Full=Vascular permeability factor; Short=VPF; Flags: Precursor >gi|51555824|dbj|BAD38847.1| vascular endothelial growth factor 190 isoform precursor [Trimeresurus flavoviridis] >gi|223711925|gb|ACN22044.1| vascular endothelial growth factor A190 isoform precursor [Trimeresurus flavoviridis]
+comp74_c0_seq2,VEGF2,58.7,0.015%,,,,,C0K3N4.1,gi|327488517|sp|C0K3N4.1|VEGFA_AGKPI RecName: Full=Vascular endothelial growth factor A; Flags: Precursor >gi|223711919|gb|ACN22041.1| vascular endothelial growth factor A166 isoform precursor [Agkistrodon piscivorus piscivorus]
+comp74_c0_seq3,VEGF3,46.3,0.012%,,,,,BAD38846.1,gi|51555822|dbj|BAD38846.1| vascular endothelial growth factor 122 isoform precursor [Trimeresurus flavoviridis]
+comp74_c0_seq4,VEGF4,40.1,0.011%,,,,,P67860.1,gi|54036551|sp|P67860.1|VEGFA_TRIFL RecName: Full=Vascular endothelial growth factor A; Short=VEGF-A; AltName: Full=Vascular permeability factor; Short=VPF; Flags: Precursor >gi|51555824|dbj|BAD38847.1| vascular endothelial growth factor 190 isoform precursor [Trimeresurus flavoviridis] >gi|223711925|gb|ACN22044.1| vascular endothelial growth factor A190 isoform precursor [Trimeresurus flavoviridis]
+comp74_c0_seq5,VEGF5,71.3,0.019%,,,,,C0K3N4.1,gi|327488517|sp|C0K3N4.1|VEGFA_AGKPI RecName: Full=Vascular endothelial growth factor A; Flags: Precursor >gi|223711919|gb|ACN22041.1| vascular endothelial growth factor A166 isoform precursor [Agkistrodon piscivorus piscivorus]
+comp184_c0_seq1,VEGF6,84.8,0.022%,49,146,58,47.9%,P67862.1,gi|54036443|sp|P67862.1|TXVE_TRIFL RecName: Full=Snake venom vascular endothelial growth factor toxin; Short=svVEGF; AltName: Full=Vascular endothelial growth factor F; Flags: Precursor >gi|51555818|dbj|BAD38844.1| snake venom vascular endothelial growth 
+comp10051_c0_seq1,,2.5,,32,234,,,,gi|327265964|ref|XP_003217777.1| PREDICTED: LOW QUALITY PROTEIN: transmembrane protein adipocyte-associated 1 homolog [Anolis carolinensis]
+comp1036_c0_seq1,,14.8,,5,20,,,,NA
+comp1058_c0_seq1,,17.8,,4,268,,,,gi|71897167|ref|NP_001026578.1| proteasome subunit alpha type-5 [Gallus gallus] >gi|311771753|ref|NP_001185745.1| putative proteasome alpha 5 subunit [Taeniopygia guttata] >gi|53133117|emb|CAG31964.1| hypothetical protein RCJMB04_14i9 [Gallus gallus]
+comp10877_c0_seq1,,2.2,,6,109,,,,NA
+comp1186_c0_seq1,,6.3,,12,470,,,,gi|327267572|ref|XP_003218573.1| PREDICTED: programmed cell death protein 4-like isoform 1 [Anolis carolinensis]
+comp1195_c0_seq1,,8.1,,4,22,,,,NA
+comp1202_c0_seq1,,12.8,,41,654,,,,gi|327275471|ref|XP_003222497.1| PREDICTED: nuclear receptor subfamily 1 group D member 1-like [Anolis carolinensis]
+comp12202_c0_seq1,,2.2,,32,23,,,,NA
+comp1222_c0_seq1,,8.6,,28,41,,,,NA
+comp12269_c0_seq1,,1.7,,5,81,,,,NA
+comp12324_c0_seq1,,2,,4,20,,,,NA
+comp1287_c0_seq1,,4.7,,16,43,,,,NA
+comp12870_c0_seq1,,1.6,,7,28,,,,NA
+comp13129_c0_seq1,,2.6,,7,90,,,,NA
+comp1341_c0_seq1,,14.8,,16,44,,,,NA
+comp1361_c0_seq1,,3,,12,38,,,,NA
+comp13994_c0_seq1,,2.4,,7,54,,,,NA
+comp14195_c0_seq1,,2.1,,13,22,,,,NA
+comp14481_c0_seq1,,1.9,,5,30,,,,NA
+comp1492_c0_seq9,,2.3,,6,88,,,,NA
+comp15048_c0_seq1,,2.2,,6,44,,,,NA
+comp1534_c0_seq1,,7,,25,682,,,,gi|327265815|ref|XP_003217703.1| PREDICTED: protein kinase C delta type-like [Anolis carolinensis]
+comp1534_c0_seq2,,6.5,,33,468,,,,gi|327265815|ref|XP_003217703.1| PREDICTED: protein kinase C delta type-like [Anolis carolinensis]
+comp15592_c0_seq1,,1.8,,14,37,,,,NA
+comp1612_c0_seq1,,3.5,,7,68,,,,NA
+comp1619_c0_seq1,,4.8,,16,515,,,,gi|327262006|ref|XP_003215817.1| PREDICTED: transmembrane protein 181-like [Anolis carolinensis]
+comp17027_c0_seq1,,1.9,,8,31,,,,NA
+comp1743_c0_seq1,,6.1,,39,12,,,,NA
+comp1756_c0_seq1,,8.3,,8,27,,,,NA
+comp17684_c0_seq1,,1.8,,30,27,,,,NA
+comp17696_c0_seq1,,1.7,,5,18,,,,NA
+comp17829_c0_seq1,,2.2,,4,65,,,,NA
+comp18355_c0_seq1,,2.2,,6,92,,,,NA
+comp18379_c0_seq1,,1.9,,5,53,,,,NA
+comp1927_c0_seq5,,2,,23,328,,,,gi|327276553|ref|XP_003223034.1| PREDICTED: peroxisomal NADH pyrophosphatase NUDT12-like [Anolis carolinensis]
+comp1995_c0_seq2,,4.8,,12,800,,,,PREDICTED: general vesicular transport factor p115-like [Anolis carolinensis]
+comp20384_c0_seq1,,1.6,,6,18,,,,NA
+comp20903_c0_seq1,,1.8,,5,21,,,,NA
+comp2116_c0_seq1,,7.8,,25,502,,,,gi|327264943|ref|XP_003217268.1| PREDICTED: transmembrane protein 104-like [Anolis carolinensis]
+comp2174_c0_seq1,,8.7,,9,500,,,,gi|119331076|ref|NP_001073185.1| xaa-Pro dipeptidase [Gallus gallus] >gi|53130802|emb|CAG31730.1| hypothetical protein RCJMB04_10d1 [Gallus gallus]
+comp2247_c0_seq1,,1.1,,13,57,,,,gi|327261903|ref|XP_003215766.1| PREDICTED: e3 ubiquitin-protein ligase HUWE1-like [Anolis carolinensis]
+comp23058_c0_seq1,,1.5,,9,31,,,,NA
+comp23870_c0_seq1,,1.7,,4,46,,,,NA
+comp2402_c0_seq1,,3.6,,54,1460,,,,gi|327260765|ref|XP_003215204.1| PREDICTED: ATP-binding cassette sub-family A member 12-like [Anolis carolinensis]
+comp2402_c0_seq2,,1.3,,26,723,,,,gi|327260765|ref|XP_003215204.1| PREDICTED: ATP-binding cassette sub-family A member 12-like [Anolis carolinensis]
+comp2405_c0_seq1,,7.4,,4,62,,,,NA
+comp24603_c0_seq1,,1.8,,4,48,,,,NA
+comp24811_c0_seq1,,1.6,,6,76,,,,gi|327260558|ref|XP_003215101.1| PREDICTED: pleckstrin homology domain-containing family G member 3-like [Anolis carolinensis]
+comp24937_c0_seq1,,1.6,,7,63,,,,NA
+comp2569_c0_seq1,,4.2,,16,1129,,,,gi|327267544|ref|XP_003218560.1| PREDICTED: STE20-like serine/threonine-protein kinase-like [Anolis carolinensis]
+comp25781_c0_seq1,,1.5,,5,39,,,,NA
+comp26139_c0_seq1,,1.4,,4,24,,,,NA
+comp26572_c0_seq1,,1.8,,8,98,,,,gi|350587510|ref|XP_003482430.1| PREDICTED: pre-mRNA 3'-end-processing factor FIP1-like [Sus scrofa]
+comp2668_c0_seq1,,7.3,,5,32,,,,NA
+comp26681_c0_seq1,,1.8,,6,43,,,,NA
+comp2715_c0_seq1,,6.8,,14,96,,,,NA
+comp2775_c0_seq1,,4.8,,5,17,,,,NA
+comp28557_c0_seq1,,1.5,,7,59,,,,NA
+comp2865_c0_seq2,,3.2,,4,58,,,,NA
+comp29253_c0_seq1,,1.5,,9,64,,,,NA
+comp2950_c0_seq1,,4.1,,25,469,,,,gi|326916618|ref|XP_003204603.1| PREDICTED: LOW QUALITY PROTEIN: nuclear receptor-binding protein-like [Meleagris gallopavo]
+comp30099_c0_seq1,,1.2,,15,20,,,,NA
+comp3045_c0_seq2,,3.2,,11,629,,,,gi|327278112|ref|XP_003223806.1| PREDICTED: peroxisomal targeting signal 1 receptor-like [Anolis carolinensis]
+comp3066_c0_seq1,,2.7,,14,67,,,,NA
+comp3075_c0_seq1,,2.2,,5,20,,,,NA
+comp3087_c0_seq1,,2.6,,45,14,,,,NA
+comp3204_c0_seq1,,2.4,,31,665,,,,"gi|326921064|ref|XP_003206784.1| PREDICTED: tectonin beta-propeller repeat-containing protein 2-like, partial [Meleagris gallopavo]"
+comp32511_c0_seq1,,1.6,,4,107,,,,gi|348504260|ref|XP_003439680.1| PREDICTED: probable ATP-dependent RNA helicase DDX56-like [Oreochromis niloticus]
+comp33456_c0_seq1,,1.7,,5,33,,,,NA
+comp33878_c0_seq1,,1.4,,4,104,,,,NA
+comp3503_c0_seq1,,4,,41,923,,,,gi|350578776|ref|XP_003480448.1| PREDICTED: MAX gene-associated protein-like [Sus scrofa]
+comp3580_c0_seq3,,3.6,,18,49,,,,NA
+comp35828_c0_seq1,,1.5,,4,45,,,,NA
+comp37234_c0_seq1,,1.4,,6,127,,,,gi|327279799|ref|XP_003224643.1| PREDICTED: serine protease 27-like [Anolis carolinensis]
+comp3790_c0_seq2,,1.6,,23,1246,,,,gi|224047860|ref|XP_002192274.1| PREDICTED: lysosomal trafficking regulator [Taeniopygia guttata]
+comp37979_c0_seq1,,1.3,,7,46,,,,NA
+comp3967_c0_seq1,,4.3,,5,25,,,,NA
+comp3982_c0_seq1,,4.7,,8,29,,,,NA
+comp39882_c0_seq1,,1.6,,11,30,,,,NA
+comp4175_c0_seq1,,1.9,,17,583,,,,gi|327272740|ref|XP_003221142.1| PREDICTED: small subunit processome component 20 homolog [Anolis carolinensis]
+comp4419_c0_seq1,,4.9,,55,95,,,,NA
+comp4577_c0_seq1,,3.1,,15,26,,,,NA
+comp4677_c0_seq1,,4.2,,7,649,,,,gi|348540682|ref|XP_003457816.1| PREDICTED: breast cancer anti-estrogen resistance protein 3-like [Oreochromis niloticus]
+comp5047_c0_seq1,,3.1,,24,103,,,,NA
+comp5255_c0_seq1,,3.7,,6,57,,,,NA
+comp5294_c0_seq1,,2.8,,42,23,,,,NA
+comp5614_c0_seq1,,3.8,,14,153,,,,NA
+comp5796_c0_seq1,,3.8,,53,837,,,,gi|327267720|ref|XP_003218647.1| PREDICTED: disintegrin and metalloproteinase domain-containing protein 9-like [Anolis carolinensis]
+comp6077_c0_seq1,,2.8,,4,14,,,,NA
+comp6326_c0_seq1,,1.8,,5,22,,,,NA
+comp6652_c0_seq1,,2.5,,4,70,,,,NA
+comp704_c0_seq5,,4.6,,10,325,,,,gi|327266398|ref|XP_003217993.1| PREDICTED: serine/threonine-protein phosphatase 1 regulatory subunit 10-like [Anolis carolinensis]
+comp729_c0_seq1,,9,,40,120,,,,NA
+comp751_c0_seq1,,7.8,,10,306,,,,gi|327262169|ref|XP_003215898.1| PREDICTED: LOW QUALITY PROTEIN: ERO1-like protein beta-like [Anolis carolinensis]
+comp7619_c0_seq1,,2.6,,5,13,,,,NA
+comp7641_c0_seq1,,3.4,,4,61,,,,NA
+comp780_c0_seq1,,11.8,,5,67,,,,NA
+comp7823_c0_seq1,,2.1,,6,67,,,,NA
+comp8080_c0_seq1,,2,,54,160,,,,NA
+comp858_c0_seq1,,18.2,,8,26,,,,NA
+comp873_c0_seq2,,9.3,,6,50,,,,NA
+comp8909_c0_seq1,,2.5,,11,273,,,,PREDICTED: LOW QUALITY PROTEIN: baculoviral IAP repeat-containing protein 6-like [Anolis carolinensis]
+comp9138_c0_seq1,,2.1,,6,60,,,,NA
+comp9222_c0_seq1,,2,,4,48,,,,NA
+comp9248_c0_seq1,,2.3,,10,307,,,,gi|327277380|ref|XP_003223443.1| PREDICTED: hypothetical protein LOC100553651 [Anolis carolinensis]
+comp9368_c0_seq1,,2,,17,68,,,,NA
+comp969_c0_seq14,,0.8,,13,95,,,,gi|259027949|gb|ACV91125.1| beta-catenin [Vicugna pacos]
+comp9925_c0_seq1,,1.9,,11,282,,,,gi|327279145|ref|XP_003224318.1| PREDICTED: ribosome biogenesis protein BRX1 homolog [Anolis carolinensis]

@@ -65,6 +65,36 @@ taiwan %>% filter(tpm > 1) %>%
   filter(!if_any(everything(), is.na)) %>%
   ggpairs(columns = 2:4)
 ```
+# Where are venom toxins?
+```{r}
+Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
+      read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
+      read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
+      read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
+  dplyr::select(target_id,tpm,id) %>% spread(id,tpm)
+pm<-readRDS("./data/pm.RDS")
+pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
+pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
+
+dat<-pm_tpm %>% group_by(target_id) %>% 
+  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(taiwan1:taiwan3)) %>% 
+  filter(venom_gland >1,venom_rna>1) #filter to remove low exp genes hugging the axis to improve readability
+
+toxins<-read.csv("./data/toxins.csv")
+
+dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
+
+dat_toxins %>% ggplot()+
+  geom_point(aes(x=target_id, y=venom_rna,color="venom"))+
+  geom_line(aes(x=target_id,y=venom_rna,group =1), color="#6B1EE1")+
+  geom_point(aes(x=target_id, y=venom_gland,color="gland"))+
+  geom_line(aes(x=target_id,y=venom_gland,group=1), color="#94E11E")+
+  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
+  scale_y_log10()+
+  theme_classic()
+
+cor(dat_toxins$venom_gland,dat_toxins$venom_rna, method = 's')
+```
 
 ## Principal component analysis
 ```{r taiwan_pca}
@@ -91,8 +121,8 @@ conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
 tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
 tp2
 
-g <- grid.arrange(tp1, tp2, ncol = 1)
-ggsave(file="plots/Figure 2 taiwan.pdf", g, width = 5, height = 10) 
+#g <- grid.arrange(tp1, tp2, ncol = 1)
+#ggsave(file="plots/Figure 2 taiwan.pdf", g, width = 5, height = 10) 
 ```
 
 As expected given the lower coverage the venom RNA nests with the venom gland samples
@@ -140,6 +170,59 @@ mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
 
 The metavenom module is highly preserved in the venom RNA
 
+
+```{r muscle contaminants}
+#Human-habu_modules from orgin of specialisation study
+habu_human_modules<-read_csv("./data/all_data_tpmKeep_modules.csv")
+#get muscle module
+habu_human_muscle<-habu_human_modules %>% filter(colors == "yellow")
+
+#filter the muscle data in vRNA gRNA matrix
+pm_tpm_muscle<-pm_tpm %>% filter(target_id %in% habu_human_muscle$habu_target_id)
+
+dat_muscle<-pm_tpm_muscle %>% group_by(target_id) %>% summarise(venom_rna=mean(taiwan1:taiwan3),venom_gland=mean(Pm_10:Pm_9))
+
+cor(dat_muscle$venom_rna,dat_muscle$venom_gland,method = 's')
+#lower correlation for muscle than venom
+
+dat_muscle %>% ggplot()+
+  geom_point(aes(x=target_id, y=venom_rna,color="venom"))+
+  geom_point(aes(x=target_id, y=venom_gland,color="gland"))+
+  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
+  scale_y_log10()+
+  ylab("RNA abundance (logTPM)")+
+  theme_bw()
+#Most mucle abundance is in vgRNA. Comparatively, vRNA has lower amount of muscle contaminants.
+
+```
+
+```{r taiwan_pca_with_muscle_removed}
+taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(gene, library) %>% summarize(tpm = sum(tpm)) 
+
+taiwan_merged2 <- rbind(taiwan %>% filter(tpm >= 2) %>% select(-est_counts), taiwan_venom2) %>% 
+  pivot_wider(names_from = library, values_from = tpm) 
+
+taiwan_merged2<-taiwan_merged2 %>% filter(!gene %in% habu_human_muscle$habu_gene_id)
+
+d <- taiwan_merged2 %>% ungroup %>% select(-gene,  -P_m_05_heart, -taiwan2) 
+d <- d[sort(rowSums(d, na.rm = T), decreasing = T, index.return = T)[[2]][1:5000],]
+d <- log(d+1) %>% t() %>% dist()
+fit <- MASS::isoMDS(d, k=2)
+plotDat <- data.frame(x = fit$points[,1], y = fit$points[,2], tissue = c(rep("venom",3), rep(c("heart", "kidney", "liver"),2), c("kidney", "liver"), c("heart", "kidney", "liver"), rep("venom gland", 28)) ) 
+
+centroids <- aggregate(cbind(x,y) ~ tissue, plotDat, mean)
+conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
+  data.frame(tissue = as.character(t),
+             ellipse(cov(plotDat[plotDat$tissue == t, 1:2]),
+                     centre=as.matrix(centroids[centroids$tissue == t,2:3]),
+                     level=0.95),
+             stringsAsFactors=FALSE)))
+
+tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
+tp2
+```
+
 ## *Protobothrops flavoviridis* (Okinawa habu)
 
 ```{r okinawa, message=F}
@@ -157,6 +240,33 @@ okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = 
 
 p2 <- okinawa_merged %>% filter(est_counts >= 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
 p2
+```
+
+```{r okinwa_venom_toxins}
+pf_toxins<-read_csv("./data/Protobothrops-Table 3.csv")
+
+pf_venom_toxins<-left_join(okinawa_merged %>% filter(Pf %in% pf_toxins$ID) %>% select(Pf,tpm,id) %>% spread(id,tpm),
+                           okinawa_merged %>% select(Pf,ref) %>% group_by(Pf) %>% summarise(ref=mean(ref))) #dataset with 57 toxins (>1 est_count)
+
+
+cor(pf_venom_toxins %>% group_by(Pf) %>% summarise(mean_tpm=mean(okinawa7:okinawa9)) %>% select(mean_tpm),pf_venom_toxins$ref, method = 's')
+#toxin vRNA and vgRNA highly correlated
+
+dat_toxins<-cbind(pf_venom_toxins$Pf,pf_venom_toxins %>% group_by(Pf) %>% summarise(mean_tpm=mean(okinawa7:okinawa9)) %>% select(mean_tpm),pf_venom_toxins$ref) %>% rename(target_id=`pf_venom_toxins$Pf`,venom_rna=mean_tpm,venom_gland=`pf_venom_toxins$ref`)
+
+dat_toxins<-left_join(dat_toxins,pf_toxins %>% rename(target_id=ID), by='target_id') %>% rename(toxin_class=`Toxin Class`)
+
+dat_toxins %>% ggplot()+
+  geom_point(aes(x=toxin_class, y=venom_rna,color="venom"))+
+  geom_line(aes(x=toxin_class,y=venom_rna,group =1), color="#6B1EE1")+
+  geom_point(aes(x=toxin_class, y=venom_gland,color="gland"))+
+  geom_line(aes(x=toxin_class,y=venom_gland,group=1), color="#94E11E")+
+  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
+  scale_y_log10()+
+  ylab("RNA abundance (logTPM)")+
+  theme_bw()
+
+
 ```
 
 ## *Ovophis okinavensis* (Hime habu)
@@ -185,5 +295,30 @@ p <- list(p1,p2,p3) %>% map(~.x + labs(x=NULL, y=NULL))
 grid.arrange(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)")
 
 g <- arrangeGrob(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)") 
-ggsave(file="plots/Figure 1 TPM.pdf", g, width = 10, height = 5) 
+#ggsave(file="plots/Figure 1 TPM.pdf", g, width = 10, height = 5) 
+```
+
+
+```{r hime_venom_toxins}
+oo_toxins<-read_csv("./data/Ovophis-Table 3.csv")
+
+oo_venom_toxins<-left_join(ovophis_merged %>% filter(Oo %in% oo_toxins$ID) %>% select(Oo,tpm,id) %>% spread(id,tpm),
+                           ovophis_merged %>% select(Oo,ref) %>% group_by(Oo) %>% summarise(ref=mean(ref))) #dataset with 49 toxins (>1 est_count)
+
+cor(oo_venom_toxins %>% group_by(Oo) %>% summarise(mean_tpm=mean(hime10:hime6)) %>% select(mean_tpm),oo_venom_toxins$ref, method = 's')
+#toxin vRNA and vgRNA highly correlated
+
+dat_toxins<-cbind(oo_venom_toxins$Oo,oo_venom_toxins %>% group_by(Oo) %>% summarise(mean_tpm=mean(hime10:hime6)) %>% select(mean_tpm),oo_venom_toxins$ref) %>% rename(target_id=`oo_venom_toxins$Oo`,venom_rna=mean_tpm,venom_gland=`oo_venom_toxins$ref`)
+
+dat_toxins<-left_join(dat_toxins,oo_toxins %>% rename(target_id=ID), by='target_id') %>% rename(toxin_class=`Toxin Class`)
+
+dat_toxins %>% ggplot()+
+  geom_point(aes(x=toxin_class, y=venom_rna,color="venom"))+
+  geom_line(aes(x=toxin_class,y=venom_rna,group =1), color="#6B1EE1")+
+  geom_point(aes(x=toxin_class, y=venom_gland,color="gland"))+
+  geom_line(aes(x=toxin_class,y=venom_gland,group=1), color="#94E11E")+
+  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
+  scale_y_log10()+
+  ylab("RNA abundance (logTPM)")+
+  theme_bw()
 ```
