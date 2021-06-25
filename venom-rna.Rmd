@@ -222,7 +222,18 @@ conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
 tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
 tp2
 ```
+```{r modelling}
+pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
 
+fit<-lm(log10(model_dat$vgRNA)~log10(model_dat$vRNA))
+summary(fit)
+
+plot(fit)
+ggplot(fit,aes(fit$residuals))+
+  geom_histogram()
+
+#model diagnostic plots how that the model has good properties
+```
 ## *Protobothrops flavoviridis* (Okinawa habu)
 
 ```{r okinawa, message=F}
