@@ -5,7 +5,7 @@ date: "4/28/2021"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 library(scales)
 library(ellipse)
@@ -225,12 +225,19 @@ tp2
 ```{r modelling}
 pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
 
+
 fit<-lm(log10(model_dat$vgRNA)~log10(model_dat$vRNA))
 summary(fit)
 
 plot(fit)
 ggplot(fit,aes(fit$residuals))+
   geom_histogram()
+
+
+model_dat %>% 
+  ggplot(aes(x=log10(vgRNA), y=log10(vRNA)))+
+  geom_point()+
+  geom_smooth(method = "lm")
 
 #model diagnostic plots how that the model has good properties
 ```
