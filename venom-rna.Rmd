@@ -13,6 +13,7 @@ library(gridExtra)
 library(grid)
 library(WGCNA)
 library(GGally) #pairs
+library(ggalluvial)
 # Also need the MASS library, which is not loaded because it conflicts with select
 ```
 
@@ -95,6 +96,31 @@ dat_toxins %>% ggplot()+
 
 cor(dat_toxins$venom_gland,dat_toxins$venom_rna, method = 's')
 ```
+
+## Alluvial plots
+```{r}
+toxins<-read.csv("./data/toxins.csv")
+toxins<-rename(toxins, target_id=Transcripts)
+allu_dat<-inner_join(dat_toxins,toxins,"target_id") %>% select(venom_gland, venom_rna, short) %>% rename(Toxin=short)
+allu_dat<-allu_dat %>% gather(Toxin) %>%  mutate(toxin = rep(allu_dat$Toxin,2)) %>% rename(tissue=Toxin)
+
+toxins<-c("SVMP","SVSP","CTL","PLA2","LAAO","CRISP","VEGF","BPP","NGF")
+allu_dat<-allu_dat %>% filter(toxin %in% toxins)
+
+ggplot(allu_dat, aes(y= log(value),
+                     axis1 = toxin,
+                     axis2 = tissue))+
+  geom_alluvium(aes(fill = toxin))+
+  geom_stratum()+
+   geom_text(stat = "stratum",
+            aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("toxin", "tissue"),
+                   expand = c(0.15, 0.05))+
+  scale_fill_viridis_d()+
+  theme_void()
+
+```
+
 
 ## Principal component analysis
 ```{r taiwan_pca}
