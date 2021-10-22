@@ -85,15 +85,6 @@ toxins<-read.csv("./data/toxins.csv")
 
 dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
 
-dat_toxins %>% ggplot()+
-  geom_point(aes(x=target_id, y=venom_rna,color="venom"))+
-  geom_line(aes(x=target_id,y=venom_rna,group =1), color="#6B1EE1")+
-  geom_point(aes(x=target_id, y=venom_gland,color="gland"))+
-  geom_line(aes(x=target_id,y=venom_gland,group=1), color="#94E11E")+
-  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
-  scale_y_log10()+
-  theme_classic()
-
 cor(dat_toxins$venom_gland,dat_toxins$venom_rna, method = 's')
 ```
 
@@ -118,6 +109,63 @@ ggplot(allu_dat, aes(y= log(value),
                    expand = c(0.15, 0.05))+
   scale_fill_viridis_d()+
   theme_void()
+
+allu_dat %>% group_by(tissue,toxin) %>% summarise(value = mean(value)) %>% 
+  ggplot(aes(toxin,log10(value),fill=tissue))+
+  geom_bar(stat = "identity", position = "dodge")+
+  scale_fill_manual(values = c("lightblue","darkgreen"))
+
+toxins<-read_csv("./data/toxins.csv",col_names = c("gene","gene_name","short","gene_type","trans","query"),skip = 1) 
+toxin_families<-c("SVMP","SVSP","CTL","PLA2","LAAO","CRISP","VEGF","BPP","NGF")
+d_t<-left_join(taiwan_merged_venom,toxins) %>% select(library,gene,tpm.x,tpm.y,est_counts,short) %>% rename(Toxin=short) %>% filter(Toxin %in% toxin_families)
+
+d_t %>% na.omit() %>% filter(Toxin=="CRISP") %>% filter(est_counts >= 1) %>% ggplot(aes(log10(tpm.y), log10(tpm.x), color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+```
+
+## Sample variance
+RNA from the venom displays much more variance than the RNA from the venom gland after a variance stabilizing transformation. While this can be attributed to inter-individual variance, from this plot it seems that there is higher inter-individual variance in venom RNA than gland RNA. The discrepancy can also be due to the venom libraries being of lower quality. Either way, according to our data, we'd expect there to be higher variation in RNA from venom than from the gland. 
+```{r}
+library(DESeq2)
+library(vsn)
+
+ten_counts<-v_Pm_counts<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
+                   read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
+                   read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
+                   read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
+  dplyr::select(target_id,est_counts,id) %>% group_by(target_id) %>% summarise(mean_count = mean(est_counts)) %>% filter(mean_count >= 10) %>% select(target_id)
+
+v_Pm_counts<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
+                   read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
+                   read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
+                   read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
+  dplyr::select(target_id,est_counts,id) %>% spread(id,est_counts) %>% column_to_rownames("target_id") %>% round() %>% 
+  rownames_to_column("target_id") %>% filter(target_id %in% ten_counts$target_id)
+
+g<-tibble(id = c("taiwan1","taiwan11","taiwan2","taiwan3"))
+
+dds_v <- DESeqDataSetFromMatrix(countData = v_Pm_counts,
+                              colData = g,
+                              design=~1, tidy = T)
+dds_v <- DESeq(dds_v)
+vsd<-vst(dds_v)
+
+
+pm<-readRDS("./data/pm.RDS")
+vg_pm_counts<-pm %>% dplyr::select(-tpm) %>% spread(library,est_counts) %>% column_to_rownames("target_id") %>% round() %>% 
+  rownames_to_column("target_id") %>% select(-c(P_m_01_heart,P_m_01_kidney,P_m_01_liver,
+                                             P_m_03_heart,P_m_03_kidney,P_m_03_liver,
+                                             P_m_05_heart,P_m_05_kidney,P_m_05_liver,
+                                             P_m_08_heart,P_m_08_kidney,P_m_08_liver)) %>% filter(target_id %in% ten_counts$target_id)
+g<-tibble(id=colnames(vg_pm_counts[2:29]))
+
+dds_vg <- DESeqDataSetFromMatrix(countData = vg_pm_counts,
+                              colData = g,
+                              design=~1, tidy = T)
+dds_vg <- DESeq(dds_vg)
+vsd_vg<-vst(dds_vg)
+
+meanSdPlot(assay(vsd))
+meanSdPlot(assay(vsd_vg))
 
 ```
 
@@ -195,8 +243,6 @@ mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
 ```
 
 The metavenom module is highly preserved in the venom RNA
-
-
 ```{r muscle contaminants}
 #Human-habu_modules from orgin of specialisation study
 habu_human_modules<-read_csv("./data/all_data_tpmKeep_modules.csv")
@@ -248,6 +294,7 @@ conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
 tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
 tp2
 ```
+
 ```{r modelling}
 pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
 
