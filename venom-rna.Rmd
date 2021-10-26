@@ -1,8 +1,10 @@
 ---
-title: "Examining "
+title: 'Examining '
 author: "Sasha Mikheyev"
 date: "4/28/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE, message=FALSE}
@@ -14,12 +16,13 @@ library(grid)
 library(WGCNA)
 library(GGally) #pairs
 library(ggalluvial)
+library(ggsci)
 # Also need the MASS library, which is not loaded because it conflicts with select
 ```
 
 ## *Protobothrops mucrosquamatus* (Taiwan habu)
 
-```{r}
+```{r,message=FALSE}
 dir = list.dirs("agneesh/all_data/kallisto_results/", full.names = T, recursive = F)
 filename = file.path(dir, "abundance.tsv")
 names <- data.frame(name = filename) %>% separate(name, sep = "//", into = c(NA,"test")) %>% separate(test, sep = "/", into = c("name", NA)) %>% pull(name)
@@ -40,34 +43,37 @@ read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan2"),
 read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>%
   left_join(genes, by = "target_id") %>% na.omit() %>% 
   group_by(library, gene) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) -> taiwan
+```
 
+### All genes
+```{r, message=F}
 averaged_data <- left_join(taiwan %>% filter(est_counts > 3) %>%
                              group_by(gene) %>% summarize(tpm = mean(tpm), est_counts = mean(est_counts)), taiwan_venom %>% group_by(gene) %>% summarize(tpm = mean(tpm)), by = "gene") 
 with(averaged_data, cor.test(tpm.x, tpm.y, method = "s"))
 tp1 <- averaged_data %>% ggplot(aes(tpm.y, tpm.x, color = log10(est_counts +1 ))) + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + theme(legend.position = 'bottom')
-tp1
+tp1 #(supp fig 1)
+```
+
+### only toxins
+```{r, message=F}
+
+with(averaged_data %>% filter(gene %in% taiwan_proteome$gene), cor.test(tpm.x, tpm.y, method = "s"))
+
+tp2 <- averaged_data %>% filter(gene %in% taiwan_proteome$gene) %>% ggplot(aes(tpm.y, tpm.x, color = log10(est_counts +1 ))) + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + theme(legend.position = 'bottom')
+tp2 #(supp fig 2)
 
 taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene")
 
 taiwan_merged_venom  %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 left_join(filter(taiwan, est_counts >= 1 & ! gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 
-p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_color_locuszoom()+
+  scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
 p1
 ```
 
-## Investigating RNA levels in 
-
-```{r}
-taiwan %>% filter(tpm > 1) %>%
-  select(-est_counts) %>% 
-  mutate(tpm = log(1+tpm)) %>% pivot_wider(names_from =  library, values_from = tpm) %>%
-  select(-taiwan2) %>%
-  filter(!if_any(everything(), is.na)) %>%
-  ggpairs(columns = 2:4)
-```
-# Where are venom toxins?
-```{r}
+## Modeling
+```{r modeling,message=FALSE}
 Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
       read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
       read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
@@ -76,7 +82,91 @@ Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="
 pm<-readRDS("./data/pm.RDS")
 pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
 pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
+pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
 
+fit<-lm(log10(vgRNA)~log10(vRNA),data = model_dat)
+summary(fit)
+```
+
+Model properties
+```{r, message=F}
+plot(fit)
+ggplot(fit,aes(fit$residuals))+
+  geom_freqpoly()
+
+model_dat %>% 
+  ggplot(aes(x=log10(vgRNA), y=log10(vRNA)))+
+  geom_point()+
+  geom_smooth(method = "lm")
+
+#model diagnostic plots how that the model has good properties
+```
+## *Protobothrops flavoviridis* (Okinawa habu)
+
+```{r okinawa, message=F}
+okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
+rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
+read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
+read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
+  left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> okinawa
+
+cor.test(okinawa_old$fpkm, okinawa_old$`frag/len`) #what does this mean?
+
+okinawa_merged <- left_join(okinawa_old, okinawa, by =c("Pf" = "target_id"))
+okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
+cor.test(okinawa_merged$tpm, okinawa_merged$`frag/len`)
+
+okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, ref), method = "s")
+cor.test(okinawa_merged$tpm,okinawa_merged$ref)
+
+
+p2 <- okinawa_merged %>% filter(est_counts >= 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_color_jco()+ scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
+p2
+```
+
+
+## *Ovophis okinavensis* (Hime habu)
+
+```{r ovophis, message=F}
+ovophis_old <- read_tsv("old/ovophis.txt") # protein data from Aird et al.
+rbind(read_tsv("data/10-Hime-Female/abundance.tsv") %>% mutate(id = "hime10"),
+      read_tsv("data/4-Hime-Female/abundance.tsv") %>% mutate(id = "hime4"),
+      read_tsv("data/5-Hime-Female/abundance.tsv") %>% mutate(id = "hime5"),
+read_tsv("data/6-Hime-Female/abundance.tsv") %>% mutate(id = "hime6") ) %>% 
+  left_join(read_tsv("data/ovophis_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> ovophis
+
+ovophis_merged <- left_join(ovophis_old, ovophis, by =c("Oo" = "target_id"))
+
+ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
+cor.test(ovophis_old$fpkm, ovophis_old$`frag/len`)
+ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
+
+p3 <- ovophis_merged %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id))  + geom_line(aes(group = Oo), color = "grey") + geom_point() + scale_color_uchicago()+ scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Ovophis okinavensis") + theme(plot.title = element_text(face = "italic")) 
+
+p3
+```
+
+```{r final_plot,message=FALSE}
+p <- list(p1,p2,p3) %>% map(~.x + labs(x=NULL, y=NULL))
+grid.arrange(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)")
+
+g <- arrangeGrob(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)") 
+#ggsave(file="plots/Figure 1 TPM.pdf", g, width = 13, height = 5) 
+```
+
+## Investigating RNA levels in 
+
+```{r,message=FALSE}
+taiwan %>% filter(tpm > 1) %>%
+  select(-est_counts) %>% 
+  mutate(tpm = log(1+tpm)) %>% pivot_wider(names_from =  library, values_from = tpm) %>%
+  select(-taiwan2) %>%
+  filter(!if_any(everything(), is.na)) %>%
+  ggpairs(columns = 2:4)
+```
+
+## Alluvial plots?
+```{r,message=FALSE}
 dat<-pm_tpm %>% group_by(target_id) %>% 
   summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(taiwan1:taiwan3)) %>% 
   filter(venom_gland >1,venom_rna>1) #filter to remove low exp genes hugging the axis to improve readability
@@ -85,11 +175,6 @@ toxins<-read.csv("./data/toxins.csv")
 
 dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
 
-cor(dat_toxins$venom_gland,dat_toxins$venom_rna, method = 's')
-```
-
-## Alluvial plots
-```{r}
 toxins<-read.csv("./data/toxins.csv")
 toxins<-rename(toxins, target_id=Transcripts)
 allu_dat<-inner_join(dat_toxins,toxins,"target_id") %>% select(venom_gland, venom_rna, short) %>% rename(Toxin=short)
@@ -109,22 +194,11 @@ ggplot(allu_dat, aes(y= log(value),
                    expand = c(0.15, 0.05))+
   scale_fill_viridis_d()+
   theme_void()
-
-allu_dat %>% group_by(tissue,toxin) %>% summarise(value = mean(value)) %>% 
-  ggplot(aes(toxin,log10(value),fill=tissue))+
-  geom_bar(stat = "identity", position = "dodge")+
-  scale_fill_manual(values = c("lightblue","darkgreen"))
-
-toxins<-read_csv("./data/toxins.csv",col_names = c("gene","gene_name","short","gene_type","trans","query"),skip = 1) 
-toxin_families<-c("SVMP","SVSP","CTL","PLA2","LAAO","CRISP","VEGF","BPP","NGF")
-d_t<-left_join(taiwan_merged_venom,toxins) %>% select(library,gene,tpm.x,tpm.y,est_counts,short) %>% rename(Toxin=short) %>% filter(Toxin %in% toxin_families)
-
-d_t %>% na.omit() %>% filter(Toxin=="CRISP") %>% filter(est_counts >= 1) %>% ggplot(aes(log10(tpm.y), log10(tpm.x), color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
 ```
 
 ## Sample variance
 RNA from the venom displays much more variance than the RNA from the venom gland after a variance stabilizing transformation. While this can be attributed to inter-individual variance, from this plot it seems that there is higher inter-individual variance in venom RNA than gland RNA. The discrepancy can also be due to the venom libraries being of lower quality. Either way, according to our data, we'd expect there to be higher variation in RNA from venom than from the gland. 
-```{r}
+```{r,message=FALSE}
 library(DESeq2)
 library(vsn)
 
@@ -171,7 +245,7 @@ meanSdPlot(assay(vsd_vg))
 
 
 ## Principal component analysis
-```{r taiwan_pca}
+```{r taiwan_pca,message=FALSE}
 taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
   group_by(gene, library) %>% summarize(tpm = sum(tpm)) 
 
@@ -234,7 +308,10 @@ mp <- modulePreservation(multiExpr, multiColor,
                          nPermutations = 200,
                          randomSeed = 1,
                          verbose = 3)
+```
 
+```{r,message=FALSE}
+mp<-readRDS("./data/module_pres.RDS")
 mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
 
 # empirical p-value of turq
@@ -243,7 +320,7 @@ mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
 ```
 
 The metavenom module is highly preserved in the venom RNA
-```{r muscle contaminants}
+```{r muscle contaminants,message=FALSE}
 #Human-habu_modules from orgin of specialisation study
 habu_human_modules<-read_csv("./data/all_data_tpmKeep_modules.csv")
 #get muscle module
@@ -268,7 +345,7 @@ dat_muscle %>% ggplot()+
 
 ```
 
-```{r taiwan_pca_with_muscle_removed}
+```{r taiwan_pca_with_muscle_removed,message=FALSE}
 taiwan_venom2 <- taiwan_venom <- read_rds("data/pm.RDS") %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
   group_by(gene, library) %>% summarize(tpm = sum(tpm)) 
 
@@ -293,123 +370,4 @@ conf.rgn  <- do.call(rbind, lapply(unique(plotDat$tissue), function(t)
 
 tp2 <- ggplot(plotDat, aes(x,y,color = tissue)) + geom_point(size=3) + theme_bw() + geom_path(data=conf.rgn) + xlab("NMDS Axis 1") + ylab("NMDS Axis 2")+ theme(legend.position = 'bottom')
 tp2
-```
-
-```{r modelling}
-pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
-
-
-fit<-lm(log10(model_dat$vgRNA)~log10(model_dat$vRNA))
-summary(fit)
-
-plot(fit)
-ggplot(fit,aes(fit$residuals))+
-  geom_histogram()
-
-
-model_dat %>% 
-  ggplot(aes(x=log10(vgRNA), y=log10(vRNA)))+
-  geom_point()+
-  geom_smooth(method = "lm")
-
-#model diagnostic plots how that the model has good properties
-```
-## *Protobothrops flavoviridis* (Okinawa habu)
-
-```{r okinawa, message=F}
-okinawa_old <- read_tsv("old/okinawa.txt") # protein data from Aird et al.
-rbind(read_tsv("data/7-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa7"),
-read_tsv("data/8-Okinawa-Female/abundance.tsv") %>% mutate(id = "okinawa8"),
-read_tsv("data/9-Okinawa-Male/abundance.tsv") %>% mutate(id = "okinawa9") ) %>% 
-  left_join(read_tsv("data/okinawa_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> okinawa
-
-okinawa_merged <- left_join(okinawa_old, okinawa, by =c("Pf" = "target_id"))
-
-okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, ref), method = "s")
-cor.test(okinawa_old$fpkm, okinawa_old$`frag/len`)
-okinawa_merged %>% group_by(id) %>% filter(est_counts >= 0) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
-
-p2 <- okinawa_merged %>% filter(est_counts >= 1) %>% ggplot(aes(ref, tpm, color = id)) + geom_line(aes(group = Pf), color = "grey")+ geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops flavoviridis") + theme(plot.title = element_text(face = "italic"))
-p2
-```
-
-```{r okinwa_venom_toxins}
-pf_toxins<-read_csv("./data/Protobothrops-Table 3.csv")
-
-pf_venom_toxins<-left_join(okinawa_merged %>% filter(Pf %in% pf_toxins$ID) %>% select(Pf,tpm,id) %>% spread(id,tpm),
-                           okinawa_merged %>% select(Pf,ref) %>% group_by(Pf) %>% summarise(ref=mean(ref))) #dataset with 57 toxins (>1 est_count)
-
-
-cor(pf_venom_toxins %>% group_by(Pf) %>% summarise(mean_tpm=mean(okinawa7:okinawa9)) %>% select(mean_tpm),pf_venom_toxins$ref, method = 's')
-#toxin vRNA and vgRNA highly correlated
-
-dat_toxins<-cbind(pf_venom_toxins$Pf,pf_venom_toxins %>% group_by(Pf) %>% summarise(mean_tpm=mean(okinawa7:okinawa9)) %>% select(mean_tpm),pf_venom_toxins$ref) %>% rename(target_id=`pf_venom_toxins$Pf`,venom_rna=mean_tpm,venom_gland=`pf_venom_toxins$ref`)
-
-dat_toxins<-left_join(dat_toxins,pf_toxins %>% rename(target_id=ID), by='target_id') %>% rename(toxin_class=`Toxin Class`)
-
-dat_toxins %>% ggplot()+
-  geom_point(aes(x=toxin_class, y=venom_rna,color="venom"))+
-  geom_line(aes(x=toxin_class,y=venom_rna,group =1), color="#6B1EE1")+
-  geom_point(aes(x=toxin_class, y=venom_gland,color="gland"))+
-  geom_line(aes(x=toxin_class,y=venom_gland,group=1), color="#94E11E")+
-  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
-  scale_y_log10()+
-  ylab("RNA abundance (logTPM)")+
-  theme_bw()
-
-
-```
-
-## *Ovophis okinavensis* (Hime habu)
-
-```{r ovophis, message=F}
-ovophis_old <- read_tsv("old/ovophis.txt") # protein data from Aird et al.
-rbind(read_tsv("data/10-Hime-Female/abundance.tsv") %>% mutate(id = "hime10"),
-      read_tsv("data/4-Hime-Female/abundance.tsv") %>% mutate(id = "hime4"),
-      read_tsv("data/5-Hime-Female/abundance.tsv") %>% mutate(id = "hime5"),
-read_tsv("data/6-Hime-Female/abundance.tsv") %>% mutate(id = "hime6") ) %>% 
-  left_join(read_tsv("data/ovophis_ref/abundance.tsv")  %>% mutate(ref = tpm) %>% select(ref, target_id), by = c("target_id")) -> ovophis
-
-ovophis_merged <- left_join(ovophis_old, ovophis, by =c("Oo" = "target_id"))
-
-ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, ref), method = "s")
-cor.test(ovophis_old$fpkm, ovophis_old$`frag/len`)
-ovophis_merged %>% group_by(id) %>% filter(est_counts > 1) %>% summarize(cor = cor(tpm, `frag/len`), method = "s")
-
-p3 <- ovophis_merged %>% filter(est_counts > 1) %>% ggplot(aes(ref, tpm, color = id))  + geom_line(aes(group = Oo), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Ovophis okinavensis") + theme(plot.title = element_text(face = "italic")) 
-
-p3
-```
-
-```{r final_plot}
-p <- list(p1,p2,p3) %>% map(~.x + labs(x=NULL, y=NULL))
-grid.arrange(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)")
-
-g <- arrangeGrob(grobs=p, ncol=3, bottom = "Venom gland gene expression (TPM)", left = "Venom mRNA level (TPM)") 
-#ggsave(file="plots/Figure 1 TPM.pdf", g, width = 10, height = 5) 
-```
-
-
-```{r hime_venom_toxins}
-oo_toxins<-read_csv("./data/Ovophis-Table 3.csv")
-
-oo_venom_toxins<-left_join(ovophis_merged %>% filter(Oo %in% oo_toxins$ID) %>% select(Oo,tpm,id) %>% spread(id,tpm),
-                           ovophis_merged %>% select(Oo,ref) %>% group_by(Oo) %>% summarise(ref=mean(ref))) #dataset with 49 toxins (>1 est_count)
-
-cor(oo_venom_toxins %>% group_by(Oo) %>% summarise(mean_tpm=mean(hime10:hime6)) %>% select(mean_tpm),oo_venom_toxins$ref, method = 's')
-#toxin vRNA and vgRNA highly correlated
-
-dat_toxins<-cbind(oo_venom_toxins$Oo,oo_venom_toxins %>% group_by(Oo) %>% summarise(mean_tpm=mean(hime10:hime6)) %>% select(mean_tpm),oo_venom_toxins$ref) %>% rename(target_id=`oo_venom_toxins$Oo`,venom_rna=mean_tpm,venom_gland=`oo_venom_toxins$ref`)
-
-dat_toxins<-left_join(dat_toxins,oo_toxins %>% rename(target_id=ID), by='target_id') %>% rename(toxin_class=`Toxin Class`)
-
-dat_toxins %>% ggplot()+
-  geom_point(aes(x=toxin_class, y=venom_rna,color="venom"))+
-  geom_line(aes(x=toxin_class,y=venom_rna,group =1), color="#6B1EE1")+
-  geom_point(aes(x=toxin_class, y=venom_gland,color="gland"))+
-  geom_line(aes(x=toxin_class,y=venom_gland,group=1), color="#94E11E")+
-  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
-  scale_y_log10()+
-  ylab("RNA abundance (logTPM)")+
-  theme_bw()
 ```
