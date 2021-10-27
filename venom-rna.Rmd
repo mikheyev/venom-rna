@@ -1,6 +1,6 @@
 ---
-title: 'Examining '
-author: "Sasha Mikheyev"
+title: 'Quantitative profiling of snake venom gland gene expression from venom RNA'
+author: "Sasha Mikheyev & Agneesh Barua"
 date: "4/28/2021"
 output:
   html_document:
@@ -48,16 +48,23 @@ read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>
 averaged_data <- left_join(taiwan %>% filter(est_counts > 3) %>%
                              group_by(gene) %>% summarize(tpm = mean(tpm), est_counts = mean(est_counts)), taiwan_venom %>% group_by(gene) %>% summarize(tpm = mean(tpm)), by = "gene") 
 with(averaged_data, cor.test(tpm.x, tpm.y, method = "s"))
-tp1 <- averaged_data %>% ggplot(aes(tpm.y, tpm.x, color = log10(est_counts +1 ))) + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + theme(legend.position = 'bottom')
+tp1 <- averaged_data %>% ggplot(aes(tpm.y, tpm.x)) + geom_hex() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) + scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland RNA (TPM)") + ylab("Venom RNA (TPM)") + labs(color=expression('Log'[10]*" counts")) + guides(fill = "none")
 tp1
 
-taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene")
+taiwan_merged_venom <- left_join(filter(taiwan, gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% left_join(taiwan_proteome)
 
 taiwan_merged_venom  %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 left_join(filter(taiwan, est_counts >= 1 & ! gene %in% taiwan_proteome$gene), taiwan_venom, by = "gene") %>% group_by(library)  %>% summarize(cor = cor(tpm.x, tpm.y), method = "s")
 
-p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, color = library)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(color = F) + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
+p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, shape = library, color = type)) + geom_line(aes(group = gene), color = "grey") + geom_point() + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x))) + theme_bw() + xlab("Average venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(shape = "none") + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic"))
 p1
+
+taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(aes(tpm.y, tpm.x, shape = library, color = type)) + geom_line(aes(group = gene), color = "grey") + geom_point() + theme_bw() + xlab("Average venom gland gene expression (TPM)") + ylab("Venom mRNA level (TPM)") + guides(shape = "none") + ggtitle("Protobothrops mucrosquamatus") + theme(plot.title = element_text(face = "italic")) + annotation_custom(grob = ggplotGrob(tp1 + ), xmin = 1, xmax = 2, ymin = 3, ymax = 4)  + scale_y_log10(labels=trans_format('log10',math_format(10^.x))) +scale_x_log10(labels=trans_format('log10',math_format(10^.x)))
+
+p1_1 <- p1 + annotation_custom(grob = ggplotGrob(tp1 + theme(axis.title=element_blank(),
+        ) ), 
+        xmin = .7, xmax = 3, ymin = 2, ymax = 5)
+  
 ```
 
 ## Investigating RNA levels in 
@@ -164,7 +171,6 @@ modules <- read_csv(file = "data/modules.csv")
 taiwan_venom_matrix <-  rbind(read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% select(-est_counts),
       rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
             read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan11"),
-            read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan2"),
             read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>% 
         filter(est_counts > 1) %>% select(target_id, library, tpm) %>%
         mutate(tpm = log(1+tpm)) %>% select(library, target_id, tpm)) %>% 
@@ -174,12 +180,12 @@ taiwan_venom_matrix2 <- taiwan_venom_matrix[,intersect(modules$target_id, colnam
 gsg <- goodSamplesGenes(taiwan_venom_matrix2)
 gsg$allOK
 
-goodModules <- modules %>% filter(target_id %in% colnames(taiwan_venom_matrix2)) %>% group_by(colors) %>% summarize(count = n() > 50) %>% filter(count == T) %>% pull(colors) # filter out small modules
+goodModules <- modules %>% filter(target_id %in% colnames(taiwan_venom_matrix2)) %>% group_by(colors) %>% summarize(count = n() > 200) %>% filter(count == T) %>% pull(colors) # filter out small modules
 
 keep <- intersect(modules %>% filter(colors %in% goodModules) %>% pull(target_id), colnames(taiwan_venom_matrix2)) 
 
 setLabels <- c("old", "new");
-multiExpr <- list(old = list(data = taiwan_venom_matrix2[1:28, keep]), new = list(data = taiwan_venom_matrix2[29:31, keep]))
+multiExpr <- list(old = list(data = taiwan_venom_matrix2[1:28, keep]), new = list(data = taiwan_venom_matrix2[28:30, keep]))
 multiColor <- list(old = modules %>% filter(target_id %in% keep) %>% pull(colors))
 
 allowWGCNAThreads(10)
@@ -191,10 +197,9 @@ mp <- modulePreservation(multiExpr, multiColor,
                          randomSeed = 1,
                          verbose = 3)
 
-mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new
+mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new %>% mutate(p = 10^mp$preservation$log.p$ref.old$inColumnsAlsoPresentIn.new$log.psummary.pres) %>% select (moduleSize, Zsummary.pres, p) 
 
-# empirical p-value of turq
-10^mp$preservation$log.p$ref.old$inColumnsAlsoPresentIn.new$log.psummary.pres[5]
+#write_rds(mp, "data/module_preservation.rds")
 
 ```
 
