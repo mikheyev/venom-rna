@@ -63,17 +63,22 @@ p1 <- taiwan_merged_venom %>% na.omit() %>% filter(est_counts >= 1) %>% ggplot(a
 p1
 ```
 
-## Modeling
+## Modeling all transcripts
 ```{r modeling,message=FALSE}
-Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan1"),
-      read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan2"),
-      read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(id="taiwan3"),
-      read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(id="taiwan11")) %>% 
-  dplyr::select(target_id,tpm,id) %>% spread(id,tpm)
-pm<-readRDS("./data/pm.RDS")
-pm<-pm %>% dplyr::select(-est_counts) %>%  spread(library,tpm)
-pm_tpm<-cbind(Pm_tpm_exp,pm[14:41]) 
-pm_tpm %>% group_by(target_id) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)->model_dat
+Pm_tpm_exp<-rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
+read_tsv("data/11-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan11"),
+read_tsv("data/2-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan2"),
+read_tsv("data/3-Taiwan-Male/abundance.tsv") %>% mutate(library = "taiwan3")) %>%
+  left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(library, gene) %>% summarize(tpm = sum(tpm), est_counts = sum(est_counts)) %>% dplyr::select(-est_counts) %>% spread(library,tpm)
+
+pm<-read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% left_join(genes, by = "target_id") %>% na.omit() %>% 
+  group_by(library,gene) %>% summarize(tpm = sum(tpm)) %>%  spread(library,tpm)
+
+pm_tpm<-left_join(pm,Pm_tpm_exp)
+
+model_dat<-pm_tpm %>% group_by(gene) %>% summarise(vRNA = mean(taiwan1:taiwan3),vgRNA = mean(Pm_10:Pm_9)) %>% filter(vRNA > 2 & vgRNA >2)
+
 fit<-lm(log10(vgRNA)~log10(vRNA),data = model_dat)
 summary(fit)
 ```
@@ -89,6 +94,30 @@ model_dat %>%
   geom_smooth(method = "lm")
 #model diagnostic plots how that the model has good properties
 ```
+
+## Modeling venom transcripts
+```{r modeling_toxins,message=FALSE}
+toxins<-read.csv("./data/toxins.csv")
+
+model_dat %>% filter(gene %in% toxins$Gene.ID) -> model_dat
+
+fit<-lm(log10(vgRNA)~log10(vRNA),data = model_dat)
+
+summary(fit)
+```
+
+Model properties
+```{r, message=F}
+plot(fit)
+ggplot(fit,aes(fit$residuals))+
+  geom_freqpoly()
+model_dat %>% 
+  ggplot(aes(x=log10(vgRNA), y=log10(vRNA)))+
+  geom_point()+
+  geom_smooth(method = "lm")
+#model diagnostic plots how that the model has good properties
+```
+
 ## *Protobothrops flavoviridis* (Okinawa habu)
 
 ```{r okinawa, message=F}
@@ -140,32 +169,6 @@ taiwan %>% filter(tpm > 1) %>%
   select(-taiwan2) %>%
   filter(!if_any(everything(), is.na)) %>%
   ggpairs(columns = 2:4)
-```
-
-## Alluvial plots?
-```{r,message=FALSE}
-dat<-pm_tpm %>% group_by(target_id) %>% 
-  summarise(venom_gland=mean(Pm_10:Pm_9),venom_rna = mean(taiwan1:taiwan3)) %>% 
-  filter(venom_gland >1,venom_rna>1) #filter to remove low exp genes hugging the axis to improve readability
-toxins<-read.csv("./data/toxins.csv")
-dat_toxins<-dat %>%filter(target_id %in% toxins$Transcripts) 
-toxins<-read.csv("./data/toxins.csv")
-toxins<-rename(toxins, target_id=Transcripts)
-allu_dat<-inner_join(dat_toxins,toxins,"target_id") %>% select(venom_gland, venom_rna, short) %>% rename(Toxin=short)
-allu_dat<-allu_dat %>% gather(Toxin) %>%  mutate(toxin = rep(allu_dat$Toxin,2)) %>% rename(tissue=Toxin)
-toxins<-c("SVMP","SVSP","CTL","PLA2","LAAO","CRISP","VEGF","BPP","NGF")
-allu_dat<-allu_dat %>% filter(toxin %in% toxins)
-ggplot(allu_dat, aes(y= log(value),
-                     axis1 = toxin,
-                     axis2 = tissue))+
-  geom_alluvium(aes(fill = toxin))+
-  geom_stratum()+
-   geom_text(stat = "stratum",
-            aes(label = after_stat(stratum))) +
-  scale_x_discrete(limits = c("toxin", "tissue"),
-                   expand = c(0.15, 0.05))+
-  scale_fill_viridis_d()+
-  theme_void()
 ```
 
 ## Sample variance
@@ -234,8 +237,35 @@ tp2
 As expected given the lower coverage the venom RNA nests with the venom gland samples
 
 ### Module preservation in Taiwan habu data
+Metavenom abundance
+```{r}
+modules<-read_csv(file = "data/modules_and_descriptions.csv") %>% left_join(genes)
+meta_v<-modules %>% filter(colors == "turquoise")
+meta_dat_plot<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% filter(venom >= 1) %>%gather(gene) %>% rename(Tissue = gene) %>% mutate(t = rep(seq(1:1502),2))
+
+
+m1<-meta_dat_plot %>% ggplot(aes(t,log10(value+1),fill = Tissue))+geom_area()+
+  scale_y_continuous(trans = 'sqrt')+
+  scale_fill_jama()+ ylab("mean log TPM") + 
+  xlab("metavenom genes")+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        aspect.ratio = 1/5)
+
+m1
+
+g<-c('107285132','107294779','107292484','107284495','107290246','107286125')
+pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% 
+  filter(gene %in% g) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% 
+  filter(venom >= 1)%>%gather(gene) %>% rename(Tissue = gene) %>% mutate(t = rep(seq(1:6),2)) %>% 
+  ggplot(aes(t,log10(value+1),fill = Tissue))+
+  geom_area()+
+  scale_fill_jama()
+
+```
+
 ```{r modules, eval = F}
-modules <- read_csv(file = "data/modules.csv")
+modules<-read_csv(file = "data/modules_and_descriptions.csv") %>% left_join(genes) %>% select(target_id,colors)
 
 taiwan_venom_matrix <-  rbind(read_rds("data/pm.RDS") %>% filter(grepl("Pm", library)) %>% select(-est_counts),
       rbind(read_tsv("data/1-Taiwan-Female/abundance.tsv") %>% mutate(library = "taiwan1"),
@@ -275,25 +305,35 @@ mp$preservation$Z$ref.old$inColumnsAlsoPresentIn.new %>% mutate(p = 10^mp$preser
 
 ```
 
-The metavenom module is highly preserved in the venom RNA
+## Muscle contamination in venom RNA and gland RNA
 ```{r muscle contaminants,message=FALSE}
 #Human-habu_modules from orgin of specialisation study
 habu_human_modules<-read_csv("./data/all_data_tpmKeep_modules.csv")
 #get muscle module
 habu_human_muscle<-habu_human_modules %>% filter(colors == "yellow")
 #filter the muscle data in vRNA gRNA matrix
-pm_tpm_muscle<-pm_tpm %>% filter(target_id %in% habu_human_muscle$habu_target_id)
-dat_muscle<-pm_tpm_muscle %>% group_by(target_id) %>% summarise(venom_rna=mean(taiwan1:taiwan3),venom_gland=mean(Pm_10:Pm_9))
-cor(dat_muscle$venom_rna,dat_muscle$venom_gland,method = 's')
-#lower correlation for muscle than venom
-dat_muscle %>% ggplot()+
-  geom_point(aes(x=target_id, y=venom_rna,color="venom"))+
-  geom_point(aes(x=target_id, y=venom_gland,color="gland"))+
-  scale_color_manual(values = c("#94E11E","#6B1EE1"))+
-  scale_y_log10()+
-  ylab("RNA abundance (logTPM)")+
-  theme_bw()
-#Most mucle abundance is in vgRNA. Comparatively, vRNA has lower amount of muscle contaminants.
+
+muscle_merged<-left_join(filter(taiwan, gene %in% habu_human_muscle$habu_gene_id), taiwan_venom, by = "gene")
+
+
+pm_tpm_muscle<-pm_tpm %>% filter(gene %in% habu_human_muscle$habu_gene_id)
+dat_muscle<-pm_tpm_muscle %>% group_by(gene) %>% summarise(venom_rna=mean(taiwan1:taiwan3),venom_gland=mean(Pm_10:Pm_9))
+```
+
+```{r}
+#muscle components have low correlation between venom and venom gland
+with(muscle_merged, cor.test(tpm.x,tpm.y, method = 's'))
+
+
+m2<-muscle_merged %>% group_by(gene) %>% summarise(venom = mean(tpm.x),gland = mean(tpm.y)) %>% gather(gene) %>% mutate(t = rep(seq(1:554),2)) %>% rename(Tissue = gene) %>% ggplot(aes(t,log10(value+1),fill = Tissue))+geom_area()+
+  scale_y_continuous(trans = 'sqrt')+
+  scale_fill_jama()+ ylab("log TPM") + 
+  xlab("muscle specific genes")+
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        aspect.ratio = 1/5)
+
+m2
 ```
 
 ```{r taiwan_pca_with_muscle_removed,message=FALSE}
