@@ -230,6 +230,9 @@ dat_muscle %>% ggplot()+
   theme_bw()
 #Most mucle abundance is in vgRNA. Comparatively, vRNA has lower amount of muscle contaminants.
 
+# as histogram
+
+dat_muscle %>% pivot_longer(cols = -1, names_to = "tissue", values_to = "tpm") %>% ggplot(aes(log(tpm), fill = tissue)) +geom_histogram() 
 ```
 
 ```{r taiwan_pca_with_muscle_removed}
