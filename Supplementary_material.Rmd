@@ -241,26 +241,35 @@ Metavenom abundance
 ```{r}
 modules<-read_csv(file = "data/modules_and_descriptions.csv") %>% left_join(genes)
 meta_v<-modules %>% filter(colors == "turquoise")
-meta_dat_plot<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% filter(venom >= 1) %>%gather(gene) %>% rename(Tissue = gene) %>% mutate(t = rep(seq(1:1502),2))
+meta_dat_plot<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% filter(venom >= 1) %>%gather(gene) %>% dplyr::rename(Tissue = gene) %>% mutate(t = rep(seq(1:1502),2))
 
-
-m1<-meta_dat_plot %>% ggplot(aes(t,log10(value+1),fill = Tissue))+geom_area()+
-  scale_y_continuous(trans = 'sqrt')+
-  scale_fill_jama()+ ylab("mean log TPM") + 
-  xlab("metavenom genes")+
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        aspect.ratio = 1/5)
+m1<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% filter(venom >= 1) %>% pivot_longer(cols = -1, names_to = "tissue", values_to = "tpm") %>%
+  ggplot(aes(log(tpm), fill = tissue)) +
+  geom_histogram()+
+  scale_fill_jama()+
+  theme_bw()+
+  theme(legend.position = "none")
+  
 
 m1
 
-g<-c('107285132','107294779','107292484','107284495','107290246','107286125')
-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% 
+g<-c('107285132','107292484','107284495','107290246','107286125')
+dat<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "turquoise"))$gene) %>% 
   filter(gene %in% g) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% 
-  filter(venom >= 1)%>%gather(gene) %>% rename(Tissue = gene) %>% mutate(t = rep(seq(1:6),2)) %>% 
-  ggplot(aes(t,log10(value+1),fill = Tissue))+
-  geom_area()+
-  scale_fill_jama()
+  filter(venom >= 1) %>% gather(gene) %>% dplyr::rename(Tissue = gene) %>% mutate(symbol = rep(c("MANF","CALR","SMS","TRAM1","PDIA4"),2))
+
+dat$symbol<-factor(dat$symbol,levels = unique(dat$symbol))
+
+m2<-dat %>% ggplot(aes(symbol,log10(value+1),color = Tissue,group =Tissue))+
+  geom_point()+
+  geom_line()+
+  xlab("meta-venom genes")+
+  ylab("mean expression")+
+  scale_color_jama()+
+  theme_bw()+
+  theme(legend.position = "none")
+
+m2
 
 ```
 
@@ -325,15 +334,33 @@ dat_muscle<-pm_tpm_muscle %>% group_by(gene) %>% summarise(venom_rna=mean(taiwan
 with(muscle_merged, cor.test(tpm.x,tpm.y, method = 's'))
 
 
-m2<-muscle_merged %>% group_by(gene) %>% summarise(venom = mean(tpm.x),gland = mean(tpm.y)) %>% gather(gene) %>% mutate(t = rep(seq(1:554),2)) %>% rename(Tissue = gene) %>% ggplot(aes(t,log10(value+1),fill = Tissue))+geom_area()+
-  scale_y_continuous(trans = 'sqrt')+
-  scale_fill_jama()+ ylab("log TPM") + 
-  xlab("muscle specific genes")+
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        aspect.ratio = 1/5)
+m3<-pm_tpm %>% filter(gene %in% (modules %>% filter(colors == "yellow"))$gene) %>% group_by(gene) %>% summarise(venom = mean(taiwan1:taiwan3),gland = mean(Pm_10:Pm_6)) %>% filter(venom >= 1) %>% pivot_longer(cols = -1, names_to = "tissue", values_to = "tpm") %>%
+  ggplot(aes(log(tpm), fill = tissue)) +
+  geom_histogram()+
+  scale_fill_jama()+
+  theme_bw()+
+  theme(legend.position = "none")
 
-m2
+m3
+
+g<-c('107297964','107295108','107303059','107291634','107303068')
+dat<-dat_muscle %>% filter(gene %in% g) %>% 
+  gather(gene) %>% dplyr::rename(Tissue = gene) %>% mutate(symbol = rep(c("CKM","TNNIN2","ACTA1","MYL4","TCAP"),2))
+
+dat$symbol<-factor(dat$symbol,levels = unique(dat$symbol))
+
+m4<-dat %>% ggplot(aes(symbol,log10(value+1),color = Tissue,group =Tissue))+
+  geom_point()+
+  geom_line()+
+  xlab("meta-venom genes")+
+  ylab("mean expression")+
+  scale_color_jama()+
+  theme_bw()+
+  theme(legend.position = "none")
+
+
+m4
+
 ```
 
 ```{r taiwan_pca_with_muscle_removed,message=FALSE}
